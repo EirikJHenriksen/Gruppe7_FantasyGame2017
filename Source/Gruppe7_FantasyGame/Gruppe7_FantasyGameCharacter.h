@@ -14,7 +14,7 @@ class AGruppe7_FantasyGameCharacter : public ACharacter
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
+	class UCameraComponent* TopDownCameraComponent;
 public:
 	AGruppe7_FantasyGameCharacter();
 
@@ -26,6 +26,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	/** A decal that projects to the cursor location. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UDecalComponent* CursorToWorld;
+
 protected:
 
 	/** Resets HMD orientation in VR. */
@@ -36,6 +40,11 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+
+	/** Called for attacks */
+	void PhysAttack();
+
+	void MagiAttack();
 
 	/** 
 	 * Called via input to turn at a given rate. 
@@ -58,12 +67,15 @@ protected:
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void Tick(float DeltaSeconds);
 	// End of APawn interface
 
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return TopDownCameraComponent; }
+	/** A decal that projects to the cursor location. */
+	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 };
 
