@@ -1,6 +1,7 @@
 // Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
 
 #include "Gruppe7_FantasyGame.h"
+#include "MagicProjectile.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
@@ -32,10 +33,10 @@ AGruppe7_FantasyGameCharacter::AGruppe7_FantasyGameCharacter()
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->bAbsoluteRotation = true; // Don't want arm to rotate when character does
+	CameraBoom->bAbsoluteRotation = true; // Don't want arm to rotate when character does. true = default.
 	CameraBoom->TargetArmLength = 800.f;
-	CameraBoom->RelativeRotation = FRotator(-60.f, 0.f, 0.f);
-	CameraBoom->bDoCollisionTest = true; // Don't want to pull camera in when it collides with level - false = default.
+	CameraBoom->RelativeRotation = FRotator(-60.f, 0.f, 45.f);
+	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level - false = default.
 
 	// Create a follow camera
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
@@ -118,6 +119,7 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		NewDirection.Z = 0.f;
 		NewDirection.Normalize();
 		SetActorRotation(NewDirection.Rotation());
+
 	}
 }
 
@@ -184,6 +186,28 @@ void AGruppe7_FantasyGameCharacter::PhysAttack()
 }
 
 void AGruppe7_FantasyGameCharacter::MagiAttack()
-{
+{	
+	//Set the required mana for casting this spell.
+	float ManaRequirement{ 0.05f };
 
+	UWorld* World = GetWorld();
+	if (World && (Mana >= ManaRequirement))
+	{	
+		FVector Location = GetActorLocation();
+		FVector Offset = FVector(50.0f, 0.0f, 0.0f);
+
+		FRotator ProjectileRotation = GetActorRotation();
+		
+		Location += Offset;
+		
+		GetWorld()->SpawnActor<AMagicProjectile>(MagicProjectileBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+
+		//Debug...
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pew!"));
+
+		//Spiller skytelyd.
+		//UGameplayStatics::PlaySound2D(GetWorld(), ShootSound, 1.f, 1.f, 0.f);
+
+		Mana -= ManaRequirement;
+	}
 }

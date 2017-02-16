@@ -30,6 +30,21 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UDecalComponent* CursorToWorld;
 
+	// Selects magic projectile.
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AMagicProjectile> MagicProjectileBlueprint;
+
+	///////////////////////////////////////////////////////////////////////////
+	// Health and Mana variables.
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
+		float Mana = 1.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
+		float Health = 1.f;
+		
+
+
 protected:
 
 	/** Resets HMD orientation in VR. */
