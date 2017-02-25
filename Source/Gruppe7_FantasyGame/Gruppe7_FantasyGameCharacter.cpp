@@ -2,6 +2,7 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "MagicProjectile.h"
+#include "ManaPotion.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
@@ -14,6 +15,9 @@ AGruppe7_FantasyGameCharacter::AGruppe7_FantasyGameCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+
+	//GetCapsuleComponent()->bGenerateOverlapEvents = true;
+	//GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AGruppe7_FantasyGameCharacter::OnOverlap);
 
 	// set our turn rates for input
 	BaseTurnRate = 0.f;
@@ -209,5 +213,34 @@ void AGruppe7_FantasyGameCharacter::MagiAttack()
 		//UGameplayStatics::PlaySound2D(GetWorld(), ShootSound, 1.f, 1.f, 0.f);
 
 		Mana -= ManaRequirement;
+	}
+}
+
+void AGruppe7_FantasyGameCharacter::ManaPotion()
+{
+	float ManaRestore{ 0.25f };
+
+	Mana += ManaRestore;
+
+	// Sørger for at mana ikke går over 100%.
+	if (Mana > 1.f)
+	{
+		Mana = 1.f;
+	}
+}
+
+void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
+{
+	if (OtherActor->IsA(AManaPotion::StaticClass()))
+	{
+		OtherActor->Destroy();
+
+		AGruppe7_FantasyGameCharacter::ManaPotion();
+
+		//Spiller av VFX.
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PickUpFX, GetTransform(), true);
+
+		//Spiller av SFX.
+		UGameplayStatics::PlaySound2D(GetWorld(), PickUpSound, 1.f, 1.f, 0.f);
 	}
 }

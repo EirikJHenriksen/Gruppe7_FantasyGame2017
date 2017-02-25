@@ -42,6 +42,17 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
 		float Health = 1.f;
+
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
+
+	// VFX.
+	UPROPERTY(EditAnywhere)
+		UParticleSystem *PickUpFX;
+
+	// SFX.
+	UPROPERTY(EditAnywhere)
+		USoundBase* PickUpSound;
 		
 
 
@@ -60,6 +71,8 @@ protected:
 	void PhysAttack();
 
 	void MagiAttack();
+
+	void ManaPotion();
 
 	/** 
 	 * Called via input to turn at a given rate. 
