@@ -35,7 +35,7 @@ AGruppe7_FantasyGameCharacter::AGruppe7_FantasyGameCharacter()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->bAbsoluteRotation = true; // Don't want arm to rotate when character does. true = default.
 	CameraBoom->TargetArmLength = 800.f;
-	CameraBoom->RelativeRotation = FRotator(-60.f, 0.f, 45.f);
+	CameraBoom->RelativeRotation = FRotator(0.f, 0.f, 90.f);
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level - false = default.
 
 	// Create a follow camera
