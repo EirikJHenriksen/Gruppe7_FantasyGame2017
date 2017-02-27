@@ -2,7 +2,9 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "MagicProjectile.h"
+#include "PhysAttackBox.h"
 #include "ManaPotion.h"
+#include "HealthPotion.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
@@ -16,8 +18,8 @@ AGruppe7_FantasyGameCharacter::AGruppe7_FantasyGameCharacter()
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
-	//GetCapsuleComponent()->bGenerateOverlapEvents = true;
-	//GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AGruppe7_FantasyGameCharacter::OnOverlap);
+	GetCapsuleComponent()->bGenerateOverlapEvents = true;
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AGruppe7_FantasyGameCharacter::OnOverlap);
 
 	// set our turn rates for input
 	BaseTurnRate = 0.f;
@@ -186,7 +188,21 @@ void AGruppe7_FantasyGameCharacter::MoveRight(float Value)
 
 void AGruppe7_FantasyGameCharacter::PhysAttack()
 {
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FVector Location = GetActorLocation();
+		FVector Offset = FVector(0.0f, 0.0f, 0.0f);
 
+		FRotator ProjectileRotation = GetActorRotation();
+
+		Location += Offset;
+
+		GetWorld()->SpawnActor<APhysAttackBox>(PhysAttackBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+
+		//Spiller lyd.
+		//UGameplayStatics::PlaySound2D(GetWorld(), AttackSound, 1.f, 1.f, 0.f);
+	}
 }
 
 void AGruppe7_FantasyGameCharacter::MagiAttack()
@@ -206,18 +222,16 @@ void AGruppe7_FantasyGameCharacter::MagiAttack()
 		
 		GetWorld()->SpawnActor<AMagicProjectile>(MagicProjectileBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
-		//Debug...
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pew!"));
-
 		//Spiller skytelyd.
-		//UGameplayStatics::PlaySound2D(GetWorld(), ShootSound, 1.f, 1.f, 0.f);
+		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
 
 		Mana -= ManaRequirement;
 	}
 }
 
 void AGruppe7_FantasyGameCharacter::ManaPotion()
-{
+{	
+	// Mengde mana som regenereres av potion.
 	float ManaRestore{ 0.25f };
 
 	Mana += ManaRestore;
@@ -227,20 +241,47 @@ void AGruppe7_FantasyGameCharacter::ManaPotion()
 	{
 		Mana = 1.f;
 	}
+
+	//Spiller av VFX.
+	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ManaPickUpFX, GetTransform(), true);
+
+	//Spiller av SFX.
+	//UGameplayStatics::PlaySound2D(GetWorld(), ManaPickUpSound, 1.f, 1.f, 0.f);
+}
+
+void AGruppe7_FantasyGameCharacter::HealthPotion()
+{	
+	// Mengde health som regenereres av potion.
+	float HealthRestore{ 0.25f };
+
+	Health += HealthRestore;
+
+	// Sørger for at health ikke går over 100%.
+	if (Health > 1.f)
+	{
+		Health = 1.f;
+	}
+
+	//Spiller av VFX.
+	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HealthPickUpFX, GetTransform(), true);
+
+	//Spiller av SFX.
+	//UGameplayStatics::PlaySound2D(GetWorld(), HealthPickUpSound, 1.f, 1.f, 0.f);
 }
 
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-	if (OtherActor->IsA(AManaPotion::StaticClass()))
+	if (OtherActor->IsA(AManaPotion::StaticClass()) && Mana < 1.f)
 	{
 		OtherActor->Destroy();
 
 		AGruppe7_FantasyGameCharacter::ManaPotion();
+	}
 
-		//Spiller av VFX.
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PickUpFX, GetTransform(), true);
+	if (OtherActor->IsA(AHealthPotion::StaticClass()) && Health < 1.f)
+	{
+		OtherActor->Destroy();
 
-		//Spiller av SFX.
-		UGameplayStatics::PlaySound2D(GetWorld(), PickUpSound, 1.f, 1.f, 0.f);
+		AGruppe7_FantasyGameCharacter::HealthPotion();
 	}
 }

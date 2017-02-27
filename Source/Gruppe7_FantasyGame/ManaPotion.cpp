@@ -13,7 +13,7 @@ AManaPotion::AManaPotion()
 	//Collision object and RootObject
 	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
 	RootComponent = RootSphere;
-	RootSphere->bGenerateOverlapEvents = true;
+	//RootSphere->bGenerateOverlapEvents = true;
 	//RootSphere->OnComponentBeginOverlap.AddDynamic(this, &AManaPotion::OnOverlap);
 
 }

@@ -34,6 +34,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AMagicProjectile> MagicProjectileBlueprint;
 
+	// Selects physical hitbox.
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class APhysAttackBox> PhysAttackBlueprint;
+
 	///////////////////////////////////////////////////////////////////////////
 	// Health and Mana variables.
 
@@ -47,12 +51,12 @@ public:
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
 	// VFX.
-	UPROPERTY(EditAnywhere)
-		UParticleSystem *PickUpFX;
+	//UPROPERTY(EditAnywhere)
+		//UParticleSystem *PickUpFX;
 
 	// SFX.
-	UPROPERTY(EditAnywhere)
-		USoundBase* PickUpSound;
+	//UPROPERTY(EditAnywhere)
+		//USoundBase* PickUpSound;
 		
 
 
@@ -73,6 +77,8 @@ protected:
 	void MagiAttack();
 
 	void ManaPotion();
+
+	void HealthPotion();
 
 	/** 
 	 * Called via input to turn at a given rate. 

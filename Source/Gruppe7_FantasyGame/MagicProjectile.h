@@ -28,16 +28,16 @@ public:
 
 	// Components that can be set/changed in editor.
 	UPROPERTY(EditAnywhere)
-	UShapeComponent* RootSphere;
+		UShapeComponent* RootSphere;
 
-	UPROPERTY(EditAnywhere)
-	USoundBase* ExplosionSound;
+	//UPROPERTY(EditAnywhere)
+		//USoundBase* ExplosionSound;
 
 	UPROPERTY(EditAnywhere)
 		float Speed = 1000.f;
 
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 60.f;
+		float TimeBeforeDestroy = 20.f;
 
 		float TimeLived{ 0 };
 
