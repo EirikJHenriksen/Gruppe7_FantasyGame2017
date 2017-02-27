@@ -5,6 +5,7 @@
 #include "PhysAttackBox.h"
 #include "ManaPotion.h"
 #include "HealthPotion.h"
+#include "PowerUp_Speed.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
@@ -269,6 +270,20 @@ void AGruppe7_FantasyGameCharacter::HealthPotion()
 	//UGameplayStatics::PlaySound2D(GetWorld(), HealthPickUpSound, 1.f, 1.f, 0.f);
 }
 
+void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
+{	
+	// Power-up som booster movement speed.
+
+	PlayerMovementSpeed = 1200.f;
+	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
+
+	//if (//TIMER!!)
+	//{
+	//	PlayerMovementSpeed = 600.f;
+	//	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
+	//}
+}
+
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
 	if (OtherActor->IsA(AManaPotion::StaticClass()) && Mana < 1.f)
@@ -283,5 +298,12 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 		OtherActor->Destroy();
 
 		AGruppe7_FantasyGameCharacter::HealthPotion();
+	}
+
+	if (OtherActor->IsA(APowerUp_Speed::StaticClass()) && (PlayerMovementSpeed == 600.f))
+	{
+		OtherActor->Destroy();
+
+		AGruppe7_FantasyGameCharacter::PowerUp_Speed();
 	}
 }

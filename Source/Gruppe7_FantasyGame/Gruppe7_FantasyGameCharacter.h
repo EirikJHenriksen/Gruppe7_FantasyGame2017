@@ -47,6 +47,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
 		float Health = 1.f;
 
+	///////////////////////////////////////////////////////////////////////////
+	// Movement Variables.
+
+	UPROPERTY(EditAnywhere)
+		float PlayerMovementSpeed = 600.f;
+
+	///////////////////////////////////////////////////////////////////////////
+	// Power-Up Variables.
+
+	// SETT INN EN TIMER TIL SPEED BOOST!
+
+	// Overlap function.
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
@@ -79,6 +91,8 @@ protected:
 	void ManaPotion();
 
 	void HealthPotion();
+
+	void PowerUp_Speed();
 
 	/** 
 	 * Called via input to turn at a given rate. 
