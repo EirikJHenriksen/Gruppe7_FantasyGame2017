@@ -47,16 +47,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
 		float Health = 1.f;
 
-	///////////////////////////////////////////////////////////////////////////
-	// Movement Variables.
 
-	UPROPERTY(EditAnywhere)
-		float PlayerMovementSpeed = 600.f;
-
-	///////////////////////////////////////////////////////////////////////////
-	// Power-Up Variables.
-
-	// SETT INN EN TIMER TIL SPEED BOOST!
 
 	// Overlap function.
 	UFUNCTION()
@@ -73,6 +64,22 @@ public:
 
 
 protected:
+
+	///////////////////////////////////////////////////////////////////////////
+	// Movement Variables.
+
+	UPROPERTY(EditAnywhere)
+		float PlayerMovementSpeed = 600.f;
+
+	///////////////////////////////////////////////////////////////////////////
+	// Power-Up Variables.
+
+	bool PlayerHasPowerup;
+
+	float MasterTimer;
+
+	float PickUpTime;
+
 
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();

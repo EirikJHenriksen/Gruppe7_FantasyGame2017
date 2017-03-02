@@ -9,6 +9,10 @@
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
+//DEBUG.
+#include <EngineGlobals.h>
+#include <Runtime/Engine/Classes/Engine/Engine.h>
+//DEBUG.
 #include "Gruppe7_FantasyGameCharacter.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -106,6 +110,7 @@ void AGruppe7_FantasyGameCharacter::SetupPlayerInputComponent(class UInputCompon
 void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
 	FHitResult Hit;
 	bool HitResult = false;
 
@@ -274,13 +279,29 @@ void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
 {	
 	// Power-up som booster movement speed.
 
+	// DEBUG.
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up activated!"));
+
+	PlayerHasPowerup = true;
+
+	// How long does the Power-up last.
+	PickUpTime = 5.f;
+
 	PlayerMovementSpeed = 1200.f;
 	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
 
-	//if (//TIMER!!)
-	//{
+	//FIKS TIMER!!!
+
+	//PickUpTime -= DeltaSeconds;
+
+	//if (PickUpTime < 0)
+	//{	
+	//	// DEBUG.
+	//	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up over!"));
+
 	//	PlayerMovementSpeed = 600.f;
 	//	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
+	//	PlayerHasPowerup = false;
 	//}
 }
 
@@ -300,7 +321,7 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 		AGruppe7_FantasyGameCharacter::HealthPotion();
 	}
 
-	if (OtherActor->IsA(APowerUp_Speed::StaticClass()) && (PlayerMovementSpeed == 600.f))
+	if (OtherActor->IsA(APowerUp_Speed::StaticClass()) && (PlayerMovementSpeed == 600.f) && (PlayerHasPowerup == false))
 	{
 		OtherActor->Destroy();
 

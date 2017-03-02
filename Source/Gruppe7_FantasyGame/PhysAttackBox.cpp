@@ -2,6 +2,10 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "Gruppe7_FantasyGameCharacter.h"
+//DEBUG.
+#include <EngineGlobals.h>
+#include <Runtime/Engine/Classes/Engine/Engine.h>
+//DEBUG.
 #include "PhysAttackBox.h"
 
 
@@ -23,6 +27,8 @@ void APhysAttackBox::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// DEBUG.
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, TEXT("PHYSICAL ATTACK!"));
 }
 
 // Called every frame
