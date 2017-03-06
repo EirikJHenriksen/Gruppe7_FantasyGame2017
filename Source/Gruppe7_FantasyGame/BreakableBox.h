@@ -14,30 +14,30 @@ public:
 	// Sets default values for this actor's properties
 	ABreakableBox();
 
-	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootBox;
-
 	/////////////////////////////////////////////////////////
 	// Objects that can fall out of box can be set in editor.
 	UPROPERTY(EditAnywhere, Category = "Contents of box")
 		TSubclassOf<class AManaPotion> ManaPotionBlueprint;
 
 protected:
+	UPROPERTY(EditAnywhere)
+		UShapeComponent* RootBox;
+
 	// Variables.
 	float Health;
+
+	float RandomNumber;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void RecieveDamage(float Damage);
+	
 
+public:	
 	void OnOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
-
+	void RecieveDamage(float Damage);
 };

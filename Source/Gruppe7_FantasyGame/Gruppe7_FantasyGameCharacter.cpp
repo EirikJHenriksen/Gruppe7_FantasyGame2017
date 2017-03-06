@@ -317,7 +317,7 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 	if (OtherActor->IsA(AHealthPotion::StaticClass()) && Health < 1.f)
 	{
 		OtherActor->Destroy();
-
+		
 		AGruppe7_FantasyGameCharacter::HealthPotion();
 	}
 

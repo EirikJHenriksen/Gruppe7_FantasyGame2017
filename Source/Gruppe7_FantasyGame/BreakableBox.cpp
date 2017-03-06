@@ -35,7 +35,6 @@ void ABreakableBox::BeginPlay()
 void ABreakableBox::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ABreakableBox::RecieveDamage(float Damage)
@@ -44,10 +43,12 @@ void ABreakableBox::RecieveDamage(float Damage)
 
 	if (Health < 0.f)
 	{
-		// Insert code that can spawn random things here!!! 
+		// Insert code that can spawn random things here!!!
+
+		RandomNumber = FMath::FRandRange(0.f, 10.f);
 
 		// DEBUG.
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("DESTRUCTION!"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("DESTRUCTION!"));
 		
 		Destroy();
 	}
@@ -58,7 +59,7 @@ void ABreakableBox::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *
 	//Registrerer ikke kollisjoner... Må finne ut av dette.
 
 	// DEBUG.
-	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, TEXT("OVERLAP!"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("OVERLAP!"));
 
 	if (OtherActor->IsA(AMagicProjectile::StaticClass()))
 	{	
@@ -66,7 +67,7 @@ void ABreakableBox::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *
 		ABreakableBox::RecieveDamage(0.5f);
 		
 		// DEBUG.
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Magic damage!"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Magic damage!"));
 	}
 
 	if (OtherActor->IsA(APhysAttackBox::StaticClass()))
@@ -75,6 +76,6 @@ void ABreakableBox::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *
 		ABreakableBox::RecieveDamage(0.25f);
 		
 		// DEBUG.
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Orange, TEXT("Physical damage!"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, TEXT("Physical damage!"));
 	}
 }

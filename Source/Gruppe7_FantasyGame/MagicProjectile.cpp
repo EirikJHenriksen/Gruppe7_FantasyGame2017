@@ -2,6 +2,7 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "Gruppe7_FantasyGameCharacter.h"
+#include "BreakableBox.h"
 #include "MagicProjectile.h"
 
 
@@ -41,17 +42,16 @@ void AMagicProjectile::Tick( float DeltaTime )
 }
 
 void AMagicProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-{
-	//if (OtherActor->IsA(AEnemy::StaticClass()))
+{	
+	//if (OtherActor->IsA(ABreakableBox::StaticClass()))
 	//{
-	//	OtherActor->Destroy();
+	//	//Cast<ABreakableBox>(OtherActor)->RecieveDamage(0.5f);
 
-	//	//Spiller av VFX.
-	//	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
+	//	////Spiller av VFX.
+	//	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
 
-	//	//Spiller av SFX.
-	//	UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSound, 1.f, 1.f, 0.f);
-
+	//	////Spiller av SFX.
+	//	//UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSound, 1.f, 1.f, 0.f);
 
 	//	Destroy();
 	//}
