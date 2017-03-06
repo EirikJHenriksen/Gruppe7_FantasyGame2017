@@ -2,6 +2,8 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "EnemyBaseClass.h"
+#include "MagicProjectile.h"
+#include "PhysAttackBox.h"
 
 
 // Sets default values
@@ -9,6 +11,12 @@ AEnemyBaseClass::AEnemyBaseClass()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+
+	// Set size for collision capsule
+	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	GetCapsuleComponent()->bGenerateOverlapEvents = true;
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyBaseClass::OnOverlap);
 
 }
 
@@ -33,3 +41,28 @@ void AEnemyBaseClass::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
+void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
+{
+	if (OtherActor->IsA(AMagicProjectile::StaticClass()))
+	{
+		OtherActor->Destroy();
+		HealthPoints -= 50.f;
+	}
+
+	if (OtherActor->IsA(APhysAttackBox::StaticClass()))
+	{
+		OtherActor->Destroy();
+		HealthPoints -= 40.f;
+	}
+
+	DeathCheck();
+}
+
+void AEnemyBaseClass::DeathCheck()
+{
+	//check if dead
+	if (HealthPoints <= 0.f)
+	{
+		Destroy();
+	}
+}
