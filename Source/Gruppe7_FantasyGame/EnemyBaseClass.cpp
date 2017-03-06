@@ -3,6 +3,7 @@
 #include "Gruppe7_FantasyGame.h"
 #include "EnemyBaseClass.h"
 #include "MagicProjectile.h"
+#include "PhysAttackBox.h"
 
 
 // Sets default values
@@ -45,8 +46,20 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 	if (OtherActor->IsA(AMagicProjectile::StaticClass()))
 	{
 		OtherActor->Destroy();
+		HealthPoints -= 50.f;
+	}
+
+	if (OtherActor->IsA(APhysAttackBox::StaticClass()))
+	{
+		OtherActor->Destroy();
 		HealthPoints -= 40.f;
+	}
+
+	DeathCheck();
 }
+
+void AEnemyBaseClass::DeathCheck()
+{
 	//check if dead
 	if (HealthPoints <= 0.f)
 	{
