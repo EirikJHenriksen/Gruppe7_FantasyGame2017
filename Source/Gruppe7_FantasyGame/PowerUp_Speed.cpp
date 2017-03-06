@@ -30,3 +30,7 @@ void APowerUp_Speed::Tick(float DeltaTime)
 
 }
 
+void APowerUp_Speed::PlayerPickUp()
+{
+
+}

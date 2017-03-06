@@ -325,6 +325,10 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 	{
 		OtherActor->Destroy();
 
+
+		// Flytt kode inn i PowerUp_Speed klassen!
+		//Cast<APowerUp_Speed>(OtherActor)->PlayerPickUp();
+
 		AGruppe7_FantasyGameCharacter::PowerUp_Speed();
 	}
 }

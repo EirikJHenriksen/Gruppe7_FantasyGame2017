@@ -16,7 +16,7 @@ AMagicProjectile::AMagicProjectile()
 	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
 	RootComponent = RootSphere;
 	RootSphere->bGenerateOverlapEvents = true;
-	RootSphere->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OnOverlap);
+	//RootSphere->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OnOverlap);
 }
 
 // Called when the game starts or when spawned
@@ -41,18 +41,18 @@ void AMagicProjectile::Tick( float DeltaTime )
 	}
 }
 
-void AMagicProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-{	
-	//if (OtherActor->IsA(ABreakableBox::StaticClass()))
-	//{
-	//	//Cast<ABreakableBox>(OtherActor)->RecieveDamage(0.5f);
-
-	//	////Spiller av VFX.
-	//	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
-
-	//	////Spiller av SFX.
-	//	//UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSound, 1.f, 1.f, 0.f);
-
-	//	Destroy();
-	//}
-}
+//void AMagicProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
+//{	
+//	//if (OtherActor->IsA(ABreakableBox::StaticClass()))
+//	//{
+//	//	//Cast<ABreakableBox>(OtherActor)->RecieveDamage(0.5f);
+//
+//	//	////Spiller av VFX.
+//	//	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
+//
+//	//	////Spiller av SFX.
+//	//	//UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSound, 1.f, 1.f, 0.f);
+//
+//	//	Destroy();
+//	//}
+//}

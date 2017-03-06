@@ -21,7 +21,7 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	// Overlap function
-	void OnOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	//void OnOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 	// Variables
 	FVector CurrentVelocity;
@@ -40,5 +40,4 @@ public:
 		float TimeBeforeDestroy = 20.f;
 
 		float TimeLived{ 0 };
-
 };
