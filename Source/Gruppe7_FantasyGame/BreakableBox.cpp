@@ -44,8 +44,7 @@ void ABreakableBox::RecieveDamage(float Damage)
 	if (Health < 0.f)
 	{
 		// Insert code that can spawn random things here!!!
-
-		RandomNumber = FMath::FRandRange(0.f, 10.f);
+		//RandomNumber = FMath::FRandRange(0.f, 10.f);
 
 		// DEBUG.
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("DESTRUCTION!"));

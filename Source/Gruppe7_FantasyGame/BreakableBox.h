@@ -19,6 +19,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Contents of box")
 		TSubclassOf<class AManaPotion> ManaPotionBlueprint;
 
+	void OnOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
 protected:
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootBox;
@@ -37,7 +39,6 @@ protected:
 	
 
 public:	
-	void OnOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-
 	void RecieveDamage(float Damage);
+
 };

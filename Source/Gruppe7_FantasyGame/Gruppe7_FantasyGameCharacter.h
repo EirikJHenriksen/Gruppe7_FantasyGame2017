@@ -80,6 +80,8 @@ protected:
 
 	float PickUpTime;
 
+	float DurationTimer;
+
 
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();

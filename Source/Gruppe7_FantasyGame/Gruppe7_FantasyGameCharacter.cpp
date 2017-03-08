@@ -111,6 +111,9 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	// Syncs MasterTimer with DeltaSeconds.
+	MasterTimer = DeltaSeconds;
+
 	FHitResult Hit;
 	bool HitResult = false;
 
@@ -282,27 +285,30 @@ void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
 	// DEBUG.
 	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up activated!"));
 
+	// Prevents multiple power-ups at once.
 	PlayerHasPowerup = true;
 
 	// How long does the Power-up last.
-	PickUpTime = 5.f;
+	DurationTimer = 10.f;
 
 	PlayerMovementSpeed = 1200.f;
 	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
 
 	//FIKS TIMER!!!
 
-	//PickUpTime -= DeltaSeconds;
 
-	//if (PickUpTime < 0)
-	//{	
-	//	// DEBUG.
-	//	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up over!"));
 
-	//	PlayerMovementSpeed = 600.f;
-	//	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
-	//	PlayerHasPowerup = false;
-	//}
+	//PickUpTime += DurationTimer;
+
+	if (PickUpTime < MasterTimer)
+	{	
+		// DEBUG.
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up over!"));
+
+		PlayerMovementSpeed = 600.f;
+		GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
+		PlayerHasPowerup = false;
+	}
 }
 
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
