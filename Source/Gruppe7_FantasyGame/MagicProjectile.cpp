@@ -62,5 +62,5 @@ void AMagicProjectile::Destroy()
 	Super::Destroy();
 
 	//Spiller av VFX.
-	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactSparkFX, GetTransform(), true);
 }

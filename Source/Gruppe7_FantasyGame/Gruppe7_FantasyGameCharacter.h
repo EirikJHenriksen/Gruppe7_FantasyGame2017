@@ -30,9 +30,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UDecalComponent* CursorToWorld;
 
+	///////////////////////////////////////////////////////////////////////////
+	// Attack object. - Physical hit box and magic effects.
+
 	// Selects magic projectile.
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AMagicProjectile> MagicProjectileBlueprint;
+
+	// Selects cone of fire.
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AConeOfFire> MagicFireConeBlueprint;
 
 	// Selects physical hitbox.
 	UPROPERTY(EditAnywhere, Category = "Spawning")
@@ -64,6 +71,12 @@ public:
 
 
 protected:
+	///////////////////////////////////////////////////////////////////////////
+	// Spell selevt variables.
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
+		int SpellSelect;
+
 
 	///////////////////////////////////////////////////////////////////////////
 	// Movement Variables.
@@ -95,6 +108,10 @@ protected:
 	/** Called for attacks */
 	void PhysAttack();
 
+	void MagiProjectile();
+
+	void MagiFireCone();
+
 	void MagiAttack();
 
 	void ManaPotion();
@@ -125,6 +142,10 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void Tick(float DeltaSeconds);
+	void SpellSwapUp();
+	void SpellSwapDown();
+	void SpellSwap(bool SwapUp);
+	void SpellSwap();
 	// End of APawn interface
 
 public:

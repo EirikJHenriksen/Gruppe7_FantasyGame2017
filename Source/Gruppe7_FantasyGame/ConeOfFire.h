@@ -3,16 +3,19 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "PhysAttackBox.generated.h"
+#include "ConeOfFire.generated.h"
 
 UCLASS()
-class GRUPPE7_FANTASYGAME_API APhysAttackBox : public AActor
+class GRUPPE7_FANTASYGAME_API AConeOfFire : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APhysAttackBox();
+	AConeOfFire();
+
+	UPROPERTY(EditAnywhere)
+		UShapeComponent* RootBox;
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,10 +26,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootBox;
-	
-	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 0.5f;
+		float TimeBeforeDestroy = 2.f;
 
 		float TimeLived{ 0 };
+	
 };

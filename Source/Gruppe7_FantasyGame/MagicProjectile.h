@@ -44,4 +44,11 @@ public:
 		float TimeBeforeDestroy = 20.f;
 
 		float TimeLived{ 0 };
+
+	// VFX.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFXs")
+		UParticleSystem *ImpactSparkFX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFXs")
+		UParticleSystem *MagiSpark;
 };

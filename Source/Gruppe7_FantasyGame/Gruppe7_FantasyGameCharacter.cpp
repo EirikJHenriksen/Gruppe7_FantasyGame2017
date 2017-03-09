@@ -2,6 +2,7 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "MagicProjectile.h"
+#include "ConeOfFire.h"
 #include "PhysAttackBox.h"
 #include "ManaPotion.h"
 #include "HealthPotion.h"
@@ -86,6 +87,9 @@ void AGruppe7_FantasyGameCharacter::SetupPlayerInputComponent(class UInputCompon
 	//Magic and physical attacks.
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::PhysAttack);
 	PlayerInputComponent->BindAction("CastSpell", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::MagiAttack);
+	PlayerInputComponent->BindAction("SpellSwapUp", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapUp);
+	PlayerInputComponent->BindAction("SpellSwapDown", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapDown);
+
 
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGruppe7_FantasyGameCharacter::MoveForward);
@@ -135,6 +139,56 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		NewDirection.Normalize();
 		SetActorRotation(NewDirection.Rotation());
 
+	}
+}
+
+void AGruppe7_FantasyGameCharacter::SpellSwapUp()
+{
+	AGruppe7_FantasyGameCharacter::SpellSwap(true);
+}
+
+void AGruppe7_FantasyGameCharacter::SpellSwapDown()
+{
+	AGruppe7_FantasyGameCharacter::SpellSwap(false);
+}
+
+
+void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
+{	
+	// Function that changes the active spell.
+
+	if (SwapUp == true)
+	{
+		++SpellSelect;
+	}
+	if (SwapUp == false)
+	{
+		--SpellSelect;
+	}
+	
+	// DEBUG - Replace with some kind of effect?
+	switch (SpellSelect)
+	{
+	default:
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ERROR: SPELL SELECT NOT FUNCTIONING!!!"));
+		break;
+	case 0:
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Magic Projectile Selected"));
+		break;
+	case 1:
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("Cone of Fire Selected"));
+		break;
+	case 2:
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("Circle of Fire Selected"));
+		break;
+	case 3:
+		SpellSelect = 0;
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Magic Projectile Selected"));
+		break;
+	case -1:
+		SpellSelect = 2;
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Circle of Fire Selected"));
+		break;
 	}
 }
 
@@ -214,21 +268,21 @@ void AGruppe7_FantasyGameCharacter::PhysAttack()
 	}
 }
 
-void AGruppe7_FantasyGameCharacter::MagiAttack()
-{	
+void AGruppe7_FantasyGameCharacter::MagiProjectile()
+{
 	//Set the required mana for casting this spell.
 	float ManaRequirement{ 0.05f };
 
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
-	{	
+	{
 		FVector Location = GetActorLocation();
 		FVector Offset = FVector(50.0f, 0.0f, 0.0f);
 
 		FRotator ProjectileRotation = GetActorRotation();
-		
+
 		Location += Offset;
-		
+
 		GetWorld()->SpawnActor<AMagicProjectile>(MagicProjectileBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
 		//Spiller skytelyd.
@@ -236,6 +290,47 @@ void AGruppe7_FantasyGameCharacter::MagiAttack()
 
 		Mana -= ManaRequirement;
 	}
+}
+
+void AGruppe7_FantasyGameCharacter::MagiFireCone()
+{
+	//Set the required mana for casting this spell.
+	float ManaRequirement{ 0.10f };
+
+	UWorld* World = GetWorld();
+	if (World && (Mana >= ManaRequirement))
+	{
+		FVector Location = GetActorLocation();
+		FVector Offset = FVector(50.0f, 0.0f, 0.0f);
+
+		FRotator ProjectileRotation = GetActorRotation();
+
+		Location += Offset;
+
+		GetWorld()->SpawnActor<AConeOfFire>(MagicFireConeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+
+		//Spiller skytelyd.
+		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
+
+		Mana -= ManaRequirement;
+	}
+}
+
+void AGruppe7_FantasyGameCharacter::MagiAttack()
+{	
+	switch (SpellSelect)
+	{
+	case 0:
+		AGruppe7_FantasyGameCharacter::MagiProjectile();
+		break;
+	case 1:
+		AGruppe7_FantasyGameCharacter::MagiFireCone();
+		break;
+	case 2:
+		//AGruppe7_FantasyGameCharacter::MagiFireCircle();
+		break;
+	}
+
 }
 
 void AGruppe7_FantasyGameCharacter::ManaPotion()
@@ -294,21 +389,15 @@ void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
 	PlayerMovementSpeed = 1200.f;
 	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
 
-	//FIKS TIMER!!!
+	//if (PickUpTime < MasterTimer)
+	//{	
+	//	// DEBUG.
+	//	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up over!"));
 
-
-
-	//PickUpTime += DurationTimer;
-
-	if (PickUpTime < MasterTimer)
-	{	
-		// DEBUG.
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up over!"));
-
-		PlayerMovementSpeed = 600.f;
-		GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
-		PlayerHasPowerup = false;
-	}
+	//	PlayerMovementSpeed = 600.f;
+	//	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
+	//	PlayerHasPowerup = false;
+	//}
 }
 
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
