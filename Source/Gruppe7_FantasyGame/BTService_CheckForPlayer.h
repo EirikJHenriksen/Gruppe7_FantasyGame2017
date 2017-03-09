@@ -6,8 +6,8 @@
 #include "BTService_CheckForPlayer.generated.h"
 
 /**
- * 
- */
+*
+*/
 UCLASS()
 class GRUPPE7_FANTASYGAME_API UBTService_CheckForPlayer : public UBTService
 {
@@ -20,6 +20,6 @@ public:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 
-	
-	
+
+
 };
