@@ -3,6 +3,7 @@
 #include "Gruppe7_FantasyGame.h"
 #include "MagicProjectile.h"
 #include "ConeOfFire.h"
+#include "CircleOfFire.h"
 #include "PhysAttackBox.h"
 #include "ManaPotion.h"
 #include "HealthPotion.h"
@@ -182,11 +183,14 @@ void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("Circle of Fire Selected"));
 		break;
 	case 3:
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Healing Magic Selected"));
+		break;
+	case 4:
 		SpellSelect = 0;
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Magic Projectile Selected"));
 		break;
 	case -1:
-		SpellSelect = 2;
+		SpellSelect = 3;
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Circle of Fire Selected"));
 		break;
 	}
@@ -271,7 +275,7 @@ void AGruppe7_FantasyGameCharacter::PhysAttack()
 void AGruppe7_FantasyGameCharacter::MagiProjectile()
 {
 	//Set the required mana for casting this spell.
-	float ManaRequirement{ 0.05f };
+	float ManaRequirement{ 0.01f };
 
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
@@ -295,7 +299,7 @@ void AGruppe7_FantasyGameCharacter::MagiProjectile()
 void AGruppe7_FantasyGameCharacter::MagiFireCone()
 {
 	//Set the required mana for casting this spell.
-	float ManaRequirement{ 0.10f };
+	float ManaRequirement{ 0.01f };
 
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
@@ -316,6 +320,55 @@ void AGruppe7_FantasyGameCharacter::MagiFireCone()
 	}
 }
 
+void AGruppe7_FantasyGameCharacter::MagiFireCircle()
+{
+	//Set the required mana for casting this spell.
+	float ManaRequirement{ 0.01f };
+
+	UWorld* World = GetWorld();
+	if (World && (Mana >= ManaRequirement))
+	{	
+		FVector Location = GetActorLocation();
+		FVector Offset = FVector(0.0f, 0.0f, 0.0f);
+
+		FRotator ProjectileRotation = GetActorRotation();
+
+		Location += Offset;
+
+		GetWorld()->SpawnActor<ACircleOfFire>(MagicFireCircleBlueprint, GetActorLocation() + GetActorForwardVector() * 1.f, GetActorRotation());
+
+		//Spiller skytelyd.
+		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
+
+		Mana -= ManaRequirement;
+	}
+}
+
+void AGruppe7_FantasyGameCharacter::MagiHealing()
+{	
+	// DEBUG.
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("ATTEMPT AT HEALING!!!"));
+
+	if (Health != 1.f)
+	{
+		//Set the required mana for casting this spell.
+		float ManaRequirement{ 0.01f };
+		float HealthRestoration{ 0.1f };
+
+		// DEBUG.
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("HEALING!!!"));
+
+		Health += HealthRestoration;
+
+		if (Health > 1.f)
+		{
+			Health = 1.f;
+		}
+
+		Mana -= ManaRequirement;
+	}
+}
+
 void AGruppe7_FantasyGameCharacter::MagiAttack()
 {	
 	switch (SpellSelect)
@@ -327,10 +380,11 @@ void AGruppe7_FantasyGameCharacter::MagiAttack()
 		AGruppe7_FantasyGameCharacter::MagiFireCone();
 		break;
 	case 2:
-		//AGruppe7_FantasyGameCharacter::MagiFireCircle();
+		AGruppe7_FantasyGameCharacter::MagiFireCircle();
+	case 3:
+		AGruppe7_FantasyGameCharacter::MagiHealing();
 		break;
 	}
-
 }
 
 void AGruppe7_FantasyGameCharacter::ManaPotion()

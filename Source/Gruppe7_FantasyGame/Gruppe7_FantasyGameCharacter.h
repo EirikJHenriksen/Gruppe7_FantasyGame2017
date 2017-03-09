@@ -41,6 +41,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AConeOfFire> MagicFireConeBlueprint;
 
+	// Selects circle of fire.
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class ACircleOfFire> MagicFireCircleBlueprint;
+
 	// Selects physical hitbox.
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class APhysAttackBox> PhysAttackBlueprint;
@@ -111,6 +115,10 @@ protected:
 	void MagiProjectile();
 
 	void MagiFireCone();
+
+	void MagiFireCircle();
+
+	void MagiHealing();
 
 	void MagiAttack();
 
