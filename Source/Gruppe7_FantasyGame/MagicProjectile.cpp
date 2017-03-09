@@ -56,3 +56,11 @@ void AMagicProjectile::Tick( float DeltaTime )
 //	//	Destroy();
 //	//}
 //}
+
+void AMagicProjectile::Destroy()
+{
+	Super::Destroy();
+
+	//Spiller av VFX.
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
+}
