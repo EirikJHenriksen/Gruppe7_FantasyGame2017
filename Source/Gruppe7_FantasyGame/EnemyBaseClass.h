@@ -27,10 +27,12 @@ public:
 
 	// Overlap function.
 	UFUNCTION()
-		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
+	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 	
 	void DeathCheck();
 
+	UPROPERTY(EditAnywhere, Category = Behavior)
+		class UBehaviorTree *BotBehavior;
 
 private:
 	UPROPERTY(EditAnywhere)
