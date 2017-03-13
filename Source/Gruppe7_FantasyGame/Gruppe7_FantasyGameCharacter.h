@@ -99,11 +99,7 @@ protected:
 
 	float DurationTimer;
 
-
-	/** Resets HMD orientation in VR. */
-	void OnResetVR();
-
-	/** Called for forwards/backward input */
+	/** Called for forward/backward input */
 	void MoveForward(float Value);
 
 	/** Called for side to side input */
@@ -122,28 +118,21 @@ protected:
 
 	void MagiAttack();
 
+
+	/** Item functions */
 	void ManaPotion();
 
 	void HealthPotion();
 
 	void PowerUp_Speed();
 
-	/** 
-	 * Called via input to turn at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
-	void TurnAtRate(float Rate);
 
-	/**
-	 * Called via input to turn look up/down at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
-	void LookUpAtRate(float Rate);
 
-	/** Handler for when a touch input begins. */
+
+	/** Handler for when jump input begins. */
 	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
 
-	/** Handler for when a touch input stops. */
+	/** Handler for when jump input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 protected:
@@ -153,7 +142,6 @@ protected:
 	void SpellSwapUp();
 	void SpellSwapDown();
 	void SpellSwap(bool SwapUp);
-	void SpellSwap();
 	// End of APawn interface
 
 public:

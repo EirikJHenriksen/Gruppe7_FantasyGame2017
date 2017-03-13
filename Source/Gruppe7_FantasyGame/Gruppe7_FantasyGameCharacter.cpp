@@ -8,7 +8,6 @@
 #include "ManaPotion.h"
 #include "HealthPotion.h"
 #include "PowerUp_Speed.h"
-#include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
 //DEBUG.
@@ -91,25 +90,13 @@ void AGruppe7_FantasyGameCharacter::SetupPlayerInputComponent(class UInputCompon
 	PlayerInputComponent->BindAction("SpellSwapUp", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapUp);
 	PlayerInputComponent->BindAction("SpellSwapDown", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapDown);
 
-
-
+	// WASD - Movement.
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGruppe7_FantasyGameCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGruppe7_FantasyGameCharacter::MoveRight);
 
-	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
-	// "turn" handles devices that provide an absolute delta, such as a mouse.
-	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &AGruppe7_FantasyGameCharacter::TurnAtRate);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &AGruppe7_FantasyGameCharacter::LookUpAtRate);
-
-	// handle touch devices
+	// Jumping.
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AGruppe7_FantasyGameCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AGruppe7_FantasyGameCharacter::TouchStopped);
-
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::OnResetVR);
 }
 
 void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
@@ -196,12 +183,6 @@ void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
 	}
 }
 
-
-void AGruppe7_FantasyGameCharacter::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
-
 void AGruppe7_FantasyGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		Jump();
@@ -210,18 +191,6 @@ void AGruppe7_FantasyGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, 
 void AGruppe7_FantasyGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		StopJumping();
-}
-
-void AGruppe7_FantasyGameCharacter::TurnAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-}
-
-void AGruppe7_FantasyGameCharacter::LookUpAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AGruppe7_FantasyGameCharacter::MoveForward(float Value)
@@ -254,7 +223,9 @@ void AGruppe7_FantasyGameCharacter::MoveRight(float Value)
 }
 
 void AGruppe7_FantasyGameCharacter::PhysAttack()
-{
+{	
+	// Legg til delay mellom angrep så de ikke kan spammes.
+
 	UWorld* World = GetWorld();
 	if (World)
 	{
@@ -381,6 +352,7 @@ void AGruppe7_FantasyGameCharacter::MagiAttack()
 		break;
 	case 2:
 		AGruppe7_FantasyGameCharacter::MagiFireCircle();
+		break;
 	case 3:
 		AGruppe7_FantasyGameCharacter::MagiHealing();
 		break;
@@ -443,15 +415,7 @@ void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
 	PlayerMovementSpeed = 1200.f;
 	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
 
-	//if (PickUpTime < MasterTimer)
-	//{	
-	//	// DEBUG.
-	//	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up over!"));
-
-	//	PlayerMovementSpeed = 600.f;
-	//	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
-	//	PlayerHasPowerup = false;
-	//}
+	// Legg inn timer.
 }
 
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
@@ -473,7 +437,6 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 	if (OtherActor->IsA(APowerUp_Speed::StaticClass()) && (PlayerMovementSpeed == 600.f) && (PlayerHasPowerup == false))
 	{
 		OtherActor->Destroy();
-
 
 		// Flytt kode inn i PowerUp_Speed klassen!
 		//Cast<APowerUp_Speed>(OtherActor)->PlayerPickUp();
