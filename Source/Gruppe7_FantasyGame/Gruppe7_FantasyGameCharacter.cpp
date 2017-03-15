@@ -103,9 +103,6 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	// Syncs MasterTimer with DeltaSeconds.
-	MasterTimer = DeltaSeconds;
-
 	FHitResult Hit;
 	bool HitResult = false;
 
@@ -158,27 +155,27 @@ void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
 	switch (SpellSelect)
 	{
 	default:
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ERROR: SPELL SELECT NOT FUNCTIONING!!!"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ERROR: SPELL SELECT NOT FUNCTIONING!!!"));
 		break;
 	case 0:
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Magic Projectile Selected"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Magic Projectile Selected"));
 		break;
 	case 1:
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("Cone of Fire Selected"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("Cone of Fire Selected"));
 		break;
 	case 2:
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("Circle of Fire Selected"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("Circle of Fire Selected"));
 		break;
 	case 3:
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Healing Magic Selected"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Healing Magic Selected"));
 		break;
 	case 4:
 		SpellSelect = 0;
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Magic Projectile Selected"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Magic Projectile Selected"));
 		break;
 	case -1:
 		SpellSelect = 3;
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Circle of Fire Selected"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Circle of Fire Selected"));
 		break;
 	}
 }
@@ -408,9 +405,6 @@ void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
 
 	// Prevents multiple power-ups at once.
 	PlayerHasPowerup = true;
-
-	// How long does the Power-up last.
-	DurationTimer = 10.f;
 
 	PlayerMovementSpeed = 1200.f;
 	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;

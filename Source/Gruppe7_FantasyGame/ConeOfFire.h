@@ -14,8 +14,9 @@ public:
 	// Sets default values for this actor's properties
 	AConeOfFire();
 
+	// Sets up collision.
 	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootBox;
+		USphereComponent* CollisionComponent;
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,8 +27,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 2.f;
+		float TimeBeforeDestroy = 1.f;
 
 		float TimeLived{ 0 };
+
+	// Projectile movement component.
+	UPROPERTY(VisibleAnywhere, Category = Movement)
+		UProjectileMovementComponent* ProjectileMovementComponent;
 	
 };

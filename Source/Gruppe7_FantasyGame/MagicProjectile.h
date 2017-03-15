@@ -20,7 +20,6 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-
 	// What happens when destroyed.
 	void Destroy();
 
@@ -30,20 +29,19 @@ public:
 	// Variables
 	FVector CurrentVelocity;
 
-	// Components that can be set/changed in editor.
+	// Sets up collision.
 	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootSphere;
+		USphereComponent* CollisionComponent;
 
 	//UPROPERTY(EditAnywhere)
 		//USoundBase* ExplosionSound;
 
 	UPROPERTY(EditAnywhere)
-		float Speed = 1000.f;
-
-	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 20.f;
+		float TimeBeforeDestroy = 10.f;
 
 		float TimeLived{ 0 };
+
+		FVector ThisVelocity;
 
 	// VFX.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFXs")
@@ -51,4 +49,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFXs")
 		UParticleSystem *MagiSpark;
+
+	// Projectile movement component.
+	UPROPERTY(VisibleAnywhere, Category = Movement)
+		UProjectileMovementComponent* ProjectileMovementComponent;
+
+	//UFUNCTION()
+	//	void OnHit(class AActor* OtherActor, class UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+	// Function that initializes the projectile's velocity in the shoot direction.
+	void FireInDirection(const FVector& ShootDirection);
 };
