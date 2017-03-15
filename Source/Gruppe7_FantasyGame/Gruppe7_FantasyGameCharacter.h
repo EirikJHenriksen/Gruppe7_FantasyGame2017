@@ -93,12 +93,6 @@ protected:
 
 	bool PlayerHasPowerup;
 
-	float MasterTimer;
-
-	float PickUpTime;
-
-	float DurationTimer;
-
 	/** Called for forward/backward input */
 	void MoveForward(float Value);
 
@@ -127,8 +121,6 @@ protected:
 	void PowerUp_Speed();
 
 
-
-
 	/** Handler for when jump input begins. */
 	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
 
@@ -138,9 +130,14 @@ protected:
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	void Tick(float DeltaSeconds);
+
+	// Spell switching.
 	void SpellSwapUp();
+
 	void SpellSwapDown();
+
 	void SpellSwap(bool SwapUp);
 	// End of APawn interface
 

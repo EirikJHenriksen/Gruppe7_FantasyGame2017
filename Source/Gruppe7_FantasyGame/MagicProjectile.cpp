@@ -12,11 +12,23 @@ AMagicProjectile::AMagicProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Collision object and RootObject
-	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
-	RootComponent = RootSphere;
-	RootSphere->bGenerateOverlapEvents = true;
-	//RootSphere->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OnOverlap);
+	// Use a sphere as a simple collision representation.
+	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("MProjectile"));
+
+	//CollisionComponent->OnComponentHit.AddDynamic(this, &AMagicProjectile::OnHit);
+
+	//CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OnOverlap);
+
+	// Use this component to drive this projectile's movement.
+	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
+	ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
+	ProjectileMovementComponent->InitialSpeed = 1000.0f;
+	ProjectileMovementComponent->MaxSpeed = 1000.0f;
+	ProjectileMovementComponent->bRotationFollowsVelocity = true;
+	ProjectileMovementComponent->bShouldBounce = false;
+	ProjectileMovementComponent->Bounciness = 1.f;
+	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
 }
 
 // Called when the game starts or when spawned
@@ -30,9 +42,9 @@ void AMagicProjectile::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	FVector NewLocation = GetActorLocation();
-	NewLocation += GetActorForwardVector() * Speed * DeltaTime;
-	SetActorLocation(NewLocation);
+	//FVector NewLocation = GetActorLocation();
+	//NewLocation += GetActorForwardVector() * Speed * DeltaTime;
+	//SetActorLocation(NewLocation);
 
 	TimeLived += DeltaTime;
 	if (TimeLived > TimeBeforeDestroy)
@@ -41,20 +53,26 @@ void AMagicProjectile::Tick( float DeltaTime )
 	}
 }
 
+// Function that initializes the projectile's velocity in the shoot direction.
+void AMagicProjectile::FireInDirection(const FVector& ShootDirection)
+{
+	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+}
+
+//void AMagicProjectile::OnHit(AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+//{
+//	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
+//	{
+//		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
+//	}
+//}
+
 //void AMagicProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 //{	
-//	//if (OtherActor->IsA(ABreakableBox::StaticClass()))
-//	//{
-//	//	//Cast<ABreakableBox>(OtherActor)->RecieveDamage(0.5f);
-//
-//	//	////Spiller av VFX.
-//	//	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
-//
-//	//	////Spiller av SFX.
-//	//	//UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSound, 1.f, 1.f, 0.f);
-//
-//	//	Destroy();
-//	//}
+//	if (OtherActor->IsRootComponentStatic())
+//	{
+//		Destroy();
+//	}
 //}
 
 void AMagicProjectile::Destroy()
