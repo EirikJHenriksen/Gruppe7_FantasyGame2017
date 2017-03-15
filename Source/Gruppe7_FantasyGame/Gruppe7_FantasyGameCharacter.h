@@ -15,6 +15,8 @@ class AGruppe7_FantasyGameCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* TopDownCameraComponent;
+
+
 public:
 	AGruppe7_FantasyGameCharacter();
 
@@ -93,6 +95,12 @@ protected:
 
 	bool PlayerHasPowerup;
 
+	float MaxPowerTime{ 5.f };
+
+	/* Handle for power-up timer */
+	FTimerHandle PowerUpTimerHandle;
+
+
 	/** Called for forward/backward input */
 	void MoveForward(float Value);
 
@@ -119,6 +127,8 @@ protected:
 	void HealthPotion();
 
 	void PowerUp_Speed();
+
+	void PowerUp_SpeedOver();
 
 
 	/** Handler for when jump input begins. */

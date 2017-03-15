@@ -34,5 +34,4 @@ public:
 	// Projectile movement component.
 	UPROPERTY(VisibleAnywhere, Category = Movement)
 		UProjectileMovementComponent* ProjectileMovementComponent;
-	
 };

@@ -137,7 +137,6 @@ void AGruppe7_FantasyGameCharacter::SpellSwapDown()
 	AGruppe7_FantasyGameCharacter::SpellSwap(false);
 }
 
-
 void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
 {	
 	// Function that changes the active spell.
@@ -409,7 +408,27 @@ void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
 	PlayerMovementSpeed = 1200.f;
 	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
 
-	// Legg inn timer.
+	// Få timer til å fungere.
+
+	if (!PlayerHasPowerup)
+	{
+		PlayerHasPowerup = true;
+
+		GetWorld()->GetTimerManager().SetTimer(PowerUpTimerHandle, this, &AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver, MaxPowerTime, false);
+	}
+}
+
+void AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver()
+{
+	// DEBUG.
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up is over!"));
+
+	PlayerHasPowerup = false;
+
+	PlayerMovementSpeed = 600.f;
+	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
+
+	GetWorld()->GetTimerManager().ClearTimer(PowerUpTimerHandle);
 }
 
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
