@@ -3,6 +3,8 @@
 #include "Gruppe7_FantasyGame.h"
 #include "EnemyBaseClass.h"
 #include "MagicProjectile.h"
+#include "ConeOfFire.h"
+#include "CircleOfFire.h"
 #include "PhysAttackBox.h"
 
 
@@ -43,13 +45,29 @@ void AEnemyBaseClass::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
+	// Physic attack
+	if (OtherActor->IsA(APhysAttackBox::StaticClass()))
+	{
+		OtherActor->Destroy();
+		HealthPoints -= 40.f;
+	}
+
+	// Magic Projectile
 	if (OtherActor->IsA(AMagicProjectile::StaticClass()))
 	{
 		OtherActor->Destroy();
 		HealthPoints -= 50.f;
 	}
 
-	if (OtherActor->IsA(APhysAttackBox::StaticClass()))
+	// Circle of fine
+	if (OtherActor->IsA(ACircleOfFire::StaticClass()))
+	{
+		OtherActor->Destroy();
+		HealthPoints -= 40.f;
+	}
+
+	// Cone of fire
+	if (OtherActor->IsA(AConeOfFire::StaticClass()))
 	{
 		OtherActor->Destroy();
 		HealthPoints -= 40.f;
