@@ -55,10 +55,10 @@ public:
 	// Health and Mana variables.
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
-		float Mana = 1.f;
+		float Mana;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
-		float Health = 1.f;
+		float Health;
 
 
 

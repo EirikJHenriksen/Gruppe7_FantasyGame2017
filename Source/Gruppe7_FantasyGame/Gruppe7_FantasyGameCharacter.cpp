@@ -8,6 +8,7 @@
 #include "ManaPotion.h"
 #include "HealthPotion.h"
 #include "PowerUp_Speed.h"
+#include "FantasyGameInstance.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
 //DEBUG.
@@ -72,6 +73,10 @@ AGruppe7_FantasyGameCharacter::AGruppe7_FantasyGameCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	/////////////////////////////////////////////////////
+	// Synchronizes variables with GameInstanceVariables.
+	//Cast<UFantasyGameInstance>(GetGameInstance())->GetHealth());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -102,6 +107,11 @@ void AGruppe7_FantasyGameCharacter::SetupPlayerInputComponent(class UInputCompon
 void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	// Synchronizes Player variables with game instance.
+	Health = Cast<UFantasyGameInstance>(GetGameInstance())->GetHealth();
+	Mana = Cast<UFantasyGameInstance>(GetGameInstance())->GetMana();
+
 
 	FHitResult Hit;
 	bool HitResult = false;
@@ -259,7 +269,8 @@ void AGruppe7_FantasyGameCharacter::MagiProjectile()
 		//Spiller skytelyd.
 		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
 
-		Mana -= ManaRequirement;
+		Cast<UFantasyGameInstance>(GetGameInstance())->DrainMana(ManaRequirement);
+		//Mana -= ManaRequirement;
 	}
 }
 
@@ -360,13 +371,7 @@ void AGruppe7_FantasyGameCharacter::ManaPotion()
 	// Mengde mana som regenereres av potion.
 	float ManaRestore{ 0.25f };
 
-	Mana += ManaRestore;
-
-	// Sørger for at mana ikke går over 100%.
-	if (Mana > 1.f)
-	{
-		Mana = 1.f;
-	}
+	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreMana(ManaRestore);
 
 	//Spiller av VFX.
 	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ManaPickUpFX, GetTransform(), true);
@@ -380,13 +385,7 @@ void AGruppe7_FantasyGameCharacter::HealthPotion()
 	// Mengde health som regenereres av potion.
 	float HealthRestore{ 0.25f };
 
-	Health += HealthRestore;
-
-	// Sørger for at health ikke går over 100%.
-	if (Health > 1.f)
-	{
-		Health = 1.f;
-	}
+	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(HealthRestore);
 
 	//Spiller av VFX.
 	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HealthPickUpFX, GetTransform(), true);
