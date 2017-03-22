@@ -16,9 +16,12 @@ AMagicProjectile::AMagicProjectile()
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("MProjectile"));
 
-	//CollisionComponent->OnComponentHit.AddDynamic(this, &AMagicProjectile::OnHit);
+	CollisionComponent->OnComponentHit.AddDynamic(this, &AMagicProjectile::OnHit);
 
-	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OnOverlap);
+	//CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OnOverlap);
+
+	// Set the root component to be the collision component.
+	RootComponent = CollisionComponent;
 
 	// Use this component to drive this projectile's movement.
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
@@ -53,24 +56,24 @@ void AMagicProjectile::Tick( float DeltaTime )
 	}
 }
 
+void AMagicProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+{
+	Destroy();
+}
+
 // Function that initializes the projectile's velocity in the shoot direction.
 void AMagicProjectile::FireInDirection(const FVector& ShootDirection)
 {	
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }
 
-//void AMagicProjectile::OnHit(AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
-//{
-//	Destroy();
+//void AMagicProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
+//{	
+//	if (OtherActor->IsRootComponentStatic())
+//	{
+//		this->Destroy();
+//	}
 //}
-
-void AMagicProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-{	
-	if (OtherActor->IsRootComponentStatic())
-	{
-		this->Destroy();
-	}
-}
 
 //void AMagicProjectile::Destroy()
 //{

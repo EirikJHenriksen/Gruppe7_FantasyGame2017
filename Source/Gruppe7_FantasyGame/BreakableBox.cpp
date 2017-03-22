@@ -21,7 +21,6 @@ ABreakableBox::ABreakableBox()
 	RootComponent = RootBox;
 	RootBox->bGenerateOverlapEvents = true;
 	RootBox->OnComponentBeginOverlap.AddDynamic(this, &ABreakableBox::OnOverlap);
-
 }
 
 // Called when the game starts or when spawned
