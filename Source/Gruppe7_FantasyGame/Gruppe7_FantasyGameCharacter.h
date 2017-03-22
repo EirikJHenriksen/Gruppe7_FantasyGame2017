@@ -61,6 +61,11 @@ public:
 		float Health;
 
 
+	/////////////////////////////////////
+	// Player velocity.
+
+	FVector PlayerVelocity;
+
 
 	// Overlap function.
 	UFUNCTION()
@@ -120,6 +125,12 @@ protected:
 
 	void MagiAttack();
 
+	void MagiAttackStop();
+
+	bool SpellIsContinuous = false;
+
+	// LAG BEDRE TIMER.
+	int BadTimer = 0;
 
 	/** Item functions */
 	void ManaPotion();

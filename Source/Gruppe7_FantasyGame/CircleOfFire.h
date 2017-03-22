@@ -15,7 +15,11 @@ public:
 	ACircleOfFire();
 
 	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootBox;
+		UShapeComponent* RootSphere;
+
+	// TEST.
+	FVector CurrentVelocity;
+	bool Stopped = false;
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,7 +30,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 2.f;
+		float TimeBeforeDestroy = 10.f;
 
 	float TimeLived{ 0 };
 	

@@ -18,13 +18,13 @@ AMagicProjectile::AMagicProjectile()
 
 	//CollisionComponent->OnComponentHit.AddDynamic(this, &AMagicProjectile::OnHit);
 
-	//CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OnOverlap);
+	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OnOverlap);
 
 	// Use this component to drive this projectile's movement.
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
 	ProjectileMovementComponent->InitialSpeed = 1000.0f;
-	ProjectileMovementComponent->MaxSpeed = 1000.0f;
+	ProjectileMovementComponent->MaxSpeed = 2000.0f; //Sett til 1000.f hvis spiller akselerasjon ikke fungerer.
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->bShouldBounce = false;
 	ProjectileMovementComponent->Bounciness = 1.f;
@@ -55,30 +55,27 @@ void AMagicProjectile::Tick( float DeltaTime )
 
 // Function that initializes the projectile's velocity in the shoot direction.
 void AMagicProjectile::FireInDirection(const FVector& ShootDirection)
-{
+{	
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }
 
 //void AMagicProjectile::OnHit(AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 //{
-//	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
-//	{
-//		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
-//	}
+//	Destroy();
 //}
 
-//void AMagicProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-//{	
-//	if (OtherActor->IsRootComponentStatic())
-//	{
-//		Destroy();
-//	}
-//}
-
-void AMagicProjectile::Destroy()
-{
-	Super::Destroy();
-
-	//Spiller av VFX.
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactSparkFX, GetTransform(), true);
+void AMagicProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
+{	
+	if (OtherActor->IsRootComponentStatic())
+	{
+		this->Destroy();
+	}
 }
+
+//void AMagicProjectile::Destroy()
+//{
+//	Super::Destroy();
+//
+//	//Spiller av VFX.
+//	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactSparkFX, GetTransform(), true);
+//}

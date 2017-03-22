@@ -73,10 +73,6 @@ AGruppe7_FantasyGameCharacter::AGruppe7_FantasyGameCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
-
-	/////////////////////////////////////////////////////
-	// Synchronizes variables with GameInstanceVariables.
-	//Cast<UFantasyGameInstance>(GetGameInstance())->GetHealth());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -92,6 +88,7 @@ void AGruppe7_FantasyGameCharacter::SetupPlayerInputComponent(class UInputCompon
 	//Magic and physical attacks.
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::PhysAttack);
 	PlayerInputComponent->BindAction("CastSpell", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::MagiAttack);
+	PlayerInputComponent->BindAction("CastSpell", IE_Released, this, &AGruppe7_FantasyGameCharacter::MagiAttackStop);
 	PlayerInputComponent->BindAction("SpellSwapUp", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapUp);
 	PlayerInputComponent->BindAction("SpellSwapDown", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapDown);
 
@@ -108,10 +105,23 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	// Gets the main characters velocity. Use this to boost projectile speed.
+	PlayerVelocity = (this->GetVelocity());
+
 	// Synchronizes Player variables with game instance.
 	Health = Cast<UFantasyGameInstance>(GetGameInstance())->GetHealth();
 	Mana = Cast<UFantasyGameInstance>(GetGameInstance())->GetMana();
 
+	// LAG EN BEDRE TIMER.
+	if (SpellIsContinuous)
+	{	
+		++BadTimer;
+		if (BadTimer > 30)
+		{
+			AGruppe7_FantasyGameCharacter::MagiAttack();
+			BadTimer = 0;
+		}
+	}
 
 	FHitResult Hit;
 	bool HitResult = false;
@@ -275,7 +285,9 @@ void AGruppe7_FantasyGameCharacter::MagiProjectile()
 }
 
 void AGruppe7_FantasyGameCharacter::MagiFireCone()
-{
+{	
+	SpellIsContinuous = true;
+
 	//Set the required mana for casting this spell.
 	float ManaRequirement{ 0.01f };
 
@@ -294,7 +306,7 @@ void AGruppe7_FantasyGameCharacter::MagiFireCone()
 		//Spiller skytelyd.
 		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
 
-		Mana -= ManaRequirement;
+		Cast<UFantasyGameInstance>(GetGameInstance())->DrainMana(ManaRequirement);
 	}
 }
 
@@ -307,23 +319,25 @@ void AGruppe7_FantasyGameCharacter::MagiFireCircle()
 	if (World && (Mana >= ManaRequirement))
 	{	
 		FVector Location = GetActorLocation();
-		FVector Offset = FVector(0.0f, 0.0f, 0.0f);
+		FVector Offset = FVector(0.0f, 0.0f, -400.0f);
 
 		FRotator ProjectileRotation = GetActorRotation();
 
 		Location += Offset;
 
-		GetWorld()->SpawnActor<ACircleOfFire>(MagicFireCircleBlueprint, GetActorLocation() + GetActorForwardVector() * 1.f, GetActorRotation());
+		GetWorld()->SpawnActor<ACircleOfFire>(MagicFireCircleBlueprint, Location + GetActorForwardVector() * 1.f, GetActorRotation());
 
 		//Spiller skytelyd.
 		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
 
-		Mana -= ManaRequirement;
+		Cast<UFantasyGameInstance>(GetGameInstance())->DrainMana(ManaRequirement);
 	}
 }
 
 void AGruppe7_FantasyGameCharacter::MagiHealing()
 {	
+	SpellIsContinuous = true;
+
 	// DEBUG.
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("ATTEMPT AT HEALING!!!"));
 
@@ -336,14 +350,9 @@ void AGruppe7_FantasyGameCharacter::MagiHealing()
 		// DEBUG.
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("HEALING!!!"));
 
-		Health += HealthRestoration;
+		Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(HealthRestoration);
 
-		if (Health > 1.f)
-		{
-			Health = 1.f;
-		}
-
-		Mana -= ManaRequirement;
+		Cast<UFantasyGameInstance>(GetGameInstance())->DrainMana(ManaRequirement);
 	}
 }
 
@@ -364,6 +373,11 @@ void AGruppe7_FantasyGameCharacter::MagiAttack()
 		AGruppe7_FantasyGameCharacter::MagiHealing();
 		break;
 	}
+}
+
+void AGruppe7_FantasyGameCharacter::MagiAttackStop()
+{
+	SpellIsContinuous = false;
 }
 
 void AGruppe7_FantasyGameCharacter::ManaPotion()

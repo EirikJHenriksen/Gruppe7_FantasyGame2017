@@ -21,10 +21,10 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	// What happens when destroyed.
-	void Destroy();
+	//void Destroy();
 
 	// Overlap function
-	//void OnOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	void OnOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 	// Variables
 	FVector CurrentVelocity;
@@ -41,8 +41,6 @@ public:
 
 		float TimeLived{ 0 };
 
-		FVector ThisVelocity;
-
 	// VFX.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFXs")
 		UParticleSystem *ImpactSparkFX;
@@ -55,7 +53,7 @@ public:
 		UProjectileMovementComponent* ProjectileMovementComponent;
 
 	//UFUNCTION()
-	//	void OnHit(class AActor* OtherActor, class UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+		//void OnHit(class AActor* OtherActor, class UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 	// Function that initializes the projectile's velocity in the shoot direction.
 	void FireInDirection(const FVector& ShootDirection);
