@@ -27,5 +27,7 @@ void AHealthPotion::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	++Rotator;
+	SetActorRotation(FRotator(0.f, (1.f * Rotator), 0.f));
 }
 

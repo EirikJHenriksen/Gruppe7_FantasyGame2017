@@ -24,5 +24,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere;
-	
+
+
+	// Makes the potion spin.
+	int Rotator = 1;
 };

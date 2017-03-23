@@ -30,6 +30,8 @@ void AManaPotion::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	++Rotator;
+	SetActorRotation(FRotator(0.f, (1.f * Rotator), 0.f));
 }
 
 //void AManaPotion::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
