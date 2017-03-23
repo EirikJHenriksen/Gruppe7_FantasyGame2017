@@ -27,6 +27,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
 		int SpellSelect;
 
+	FVector PlayerLocation;
 
 	float GetHealth();
 
@@ -49,4 +50,8 @@ public:
 	void SwapDown();
 
 	int GetCurrentSpell();
+	
+	void SetPlayerLocation(FVector Location);
+	
+	FVector GetPlayerLocation();
 };

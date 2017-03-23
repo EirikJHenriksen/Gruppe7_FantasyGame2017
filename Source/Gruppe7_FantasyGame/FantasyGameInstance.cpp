@@ -85,3 +85,13 @@ int UFantasyGameInstance::GetCurrentSpell()
 {
 	return SpellSelect;
 }
+
+void UFantasyGameInstance::SetPlayerLocation(FVector Location)
+{
+	PlayerLocation = Location;
+}
+
+FVector UFantasyGameInstance::GetPlayerLocation()
+{
+	return PlayerLocation;
+}

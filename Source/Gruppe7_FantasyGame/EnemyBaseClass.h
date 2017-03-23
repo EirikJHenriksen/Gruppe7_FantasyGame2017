@@ -22,6 +22,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void DistanceCheck();
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -34,8 +36,23 @@ public:
 	UPROPERTY(EditAnywhere, Category = Behavior)
 		class UBehaviorTree *BotBehavior;
 
+	///////////////////////////////////////
+	// Distance detection variables.
+	FVector TargetCharacterLoc;
+
+	FVector DistanceVector;
+
+	float DistanceFloat;
+
+	float EngageRange = 500.f;
+
+	float AttackRange = 100.f;
+
+	bool EngageTarget = false;
+
+	bool AttackTarget = false;
+
 private:
 	UPROPERTY(EditAnywhere)
 		float HealthPoints = 100.f;
-	
 };

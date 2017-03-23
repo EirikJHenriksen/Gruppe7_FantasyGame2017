@@ -62,7 +62,7 @@ public:
 
 
 	/////////////////////////////////////
-	// Player velocity.
+	// Movement/Location variables.
 
 	FVector PlayerVelocity;
 

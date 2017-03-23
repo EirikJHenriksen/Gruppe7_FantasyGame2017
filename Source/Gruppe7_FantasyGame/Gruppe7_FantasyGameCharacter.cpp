@@ -110,6 +110,9 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 	// Gets the main characters velocity. Use this to boost projectile speed.
 	PlayerVelocity = (this->GetVelocity());
 
+	// Oppdaterer GameInstance med spillerens plassering.
+	Cast<UFantasyGameInstance>(GetGameInstance())->SetPlayerLocation(GetActorLocation());
+
 	// Synchronizes Player variables with game instance.
 	Health = Cast<UFantasyGameInstance>(GetGameInstance())->GetHealth();
 	Mana = Cast<UFantasyGameInstance>(GetGameInstance())->GetMana();

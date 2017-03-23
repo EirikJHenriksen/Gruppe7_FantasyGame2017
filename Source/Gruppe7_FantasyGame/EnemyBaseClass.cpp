@@ -6,6 +6,12 @@
 #include "ConeOfFire.h"
 #include "CircleOfFire.h"
 #include "PhysAttackBox.h"
+#include "Gruppe7_FantasyGameCharacter.h"
+#include "FantasyGameInstance.h"
+//DEBUG.
+#include <EngineGlobals.h>
+#include <Runtime/Engine/Classes/Engine/Engine.h>
+//DEBUG.
 
 
 // Sets default values
@@ -34,6 +40,50 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Checks distance between player and enemy.
+	DistanceCheck();
+}
+
+void AEnemyBaseClass::DistanceCheck()
+{
+	TargetCharacterLoc = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
+
+	DistanceVector = GetActorLocation() - TargetCharacterLoc;
+
+	DistanceFloat = DistanceVector.Size();
+
+	// Enemy starts following player.
+	if (DistanceFloat <= EngageRange)
+	{
+		EngageTarget = true;
+		// DEBUG.
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ENEMY MOVES TOWARDS PLAYER!!!"));
+	}
+
+	// DEBUG.
+	// Enemy stops following player.
+	if (DistanceFloat <= EngageRange)
+	{
+		EngageTarget = true;
+		// DEBUG.
+		////GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ENEMY STOPS MOVING TOWARDS PLAYER!!!"));
+	}
+
+	// Enemy starts attacking player.
+	if (DistanceFloat <= AttackRange)
+	{
+		AttackTarget = true;
+		// DEBUG.
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ENEMY ATTACKS PLAYER!!!"));
+	}
+
+	// Enemy stops attacking player.
+	if (DistanceFloat >= AttackRange)
+	{
+		AttackTarget = false;
+		// DEBUG.
+		////GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ENEMY STOPS ATTACKING PLAYER!!!"));
+	}
 }
 
 // Called to bind functionality to input
