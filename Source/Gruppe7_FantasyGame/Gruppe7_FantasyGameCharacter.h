@@ -132,6 +132,8 @@ protected:
 	// LAG BEDRE TIMER.
 	int BadTimer = 0;
 
+	int BadTimer2 = 0;
+
 	/** Item functions */
 	void ManaPotion();
 

@@ -60,3 +60,28 @@ void UFantasyGameInstance::RestoreMana(float Input)
 		Mana = 1.f;
 	}
 }
+
+void UFantasyGameInstance::SwapUp()
+{
+	++SpellSelect;
+
+	if (SpellSelect == 4)
+	{
+		SpellSelect = 0;
+	}
+}
+
+void UFantasyGameInstance::SwapDown()
+{
+	--SpellSelect;
+
+	if (SpellSelect == -1)
+	{
+		SpellSelect = 3;
+	}
+}
+
+int UFantasyGameInstance::GetCurrentSpell()
+{
+	return SpellSelect;
+}

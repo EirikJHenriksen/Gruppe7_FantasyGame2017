@@ -60,10 +60,12 @@ AGruppe7_FantasyGameCharacter::AGruppe7_FantasyGameCharacter()
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/Textures/M_Cursor_Decal.M_Cursor_Decal'"));
+	
 	if (DecalMaterialAsset.Succeeded())
 	{
 		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
 	}
+	
 	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 
@@ -111,6 +113,7 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 	// Synchronizes Player variables with game instance.
 	Health = Cast<UFantasyGameInstance>(GetGameInstance())->GetHealth();
 	Mana = Cast<UFantasyGameInstance>(GetGameInstance())->GetMana();
+	SpellSelect = Cast<UFantasyGameInstance>(GetGameInstance())->GetCurrentSpell();
 
 	// LAG EN BEDRE TIMER.
 	if (SpellIsContinuous)
@@ -120,6 +123,17 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		{
 			AGruppe7_FantasyGameCharacter::MagiAttack();
 			BadTimer = 0;
+		}
+	}
+
+	// LAG EN BEDRE TIMER.
+	if (PlayerHasPowerup)
+	{
+		++BadTimer2;
+		if (BadTimer2 > 600)
+		{
+			AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver();
+			BadTimer2 = 0;
 		}
 	}
 
@@ -143,7 +157,6 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		NewDirection.Z = 0.f;
 		NewDirection.Normalize();
 		SetActorRotation(NewDirection.Rotation());
-
 	}
 }
 
@@ -163,11 +176,11 @@ void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
 
 	if (SwapUp == true)
 	{
-		++SpellSelect;
+		Cast<UFantasyGameInstance>(GetGameInstance())->SwapUp();
 	}
 	if (SwapUp == false)
 	{
-		--SpellSelect;
+		Cast<UFantasyGameInstance>(GetGameInstance())->SwapDown();
 	}
 	
 	// DEBUG - Replace with some kind of effect?
@@ -189,11 +202,11 @@ void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
 		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Healing Magic Selected"));
 		break;
 	case 4:
-		SpellSelect = 0;
+		//SpellSelect = 0;
 		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Magic Projectile Selected"));
 		break;
 	case -1:
-		SpellSelect = 3;
+		//SpellSelect = 3;
 		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Circle of Fire Selected"));
 		break;
 	}
@@ -423,12 +436,12 @@ void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
 
 	// Få timer til å fungere.
 
-	if (!PlayerHasPowerup)
-	{
-		PlayerHasPowerup = true;
+	//if (!PlayerHasPowerup)
+	//{
+	//	PlayerHasPowerup = true;
 
-		GetWorld()->GetTimerManager().SetTimer(PowerUpTimerHandle, this, &AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver, MaxPowerTime, false);
-	}
+	//	GetWorld()->GetTimerManager().SetTimer(PowerUpTimerHandle, this, &AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver, MaxPowerTime, false);
+	//}
 }
 
 void AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver()
@@ -445,7 +458,10 @@ void AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver()
 }
 
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-{
+{	
+	////////////////////////////////////////////////////////////////////////////////
+	// POTIONS AND RESTORATIVE ITEMS.
+
 	if (OtherActor->IsA(AManaPotion::StaticClass()) && Mana < 1.f)
 	{
 		OtherActor->Destroy();
@@ -460,13 +476,21 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 		AGruppe7_FantasyGameCharacter::HealthPotion();
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	// POWER-UPS.
+
 	if (OtherActor->IsA(APowerUp_Speed::StaticClass()) && (PlayerMovementSpeed == 600.f) && (PlayerHasPowerup == false))
-	{
-		OtherActor->Destroy();
+	{	
+		if (!PlayerHasPowerup)
+		{
+			OtherActor->Destroy();
 
-		// Flytt kode inn i PowerUp_Speed klassen!
-		//Cast<APowerUp_Speed>(OtherActor)->PlayerPickUp();
-
-		AGruppe7_FantasyGameCharacter::PowerUp_Speed();
+			AGruppe7_FantasyGameCharacter::PowerUp_Speed();
+		}
+		else
+		{	
+			// DEBUG - Erstatt med en effekt?
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("A Power-up is already active!"));
+		}
 	}
 }

@@ -24,6 +24,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
 		float Mana;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
+		int SpellSelect;
+
 
 	float GetHealth();
 
@@ -40,4 +43,10 @@ public:
 	void RestoreHealth(float Input);
 	
 	void RestoreMana(float Input);
+
+	void SwapUp();
+
+	void SwapDown();
+
+	int GetCurrentSpell();
 };
