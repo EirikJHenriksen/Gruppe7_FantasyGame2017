@@ -3,7 +3,7 @@
 #include "Gruppe7_FantasyGame.h"
 #include "MagicProjectile.h"
 #include "ConeOfFire.h"
-#include "CircleOfFire.h"
+#include "CircleOfThorns.h"
 #include "PhysAttackBox.h"
 #include "ManaPotion.h"
 #include "HealthPotion.h"
@@ -11,10 +11,6 @@
 #include "FantasyGameInstance.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
-//DEBUG.
-#include <EngineGlobals.h>
-#include <Runtime/Engine/Classes/Engine/Engine.h>
-//DEBUG.
 #include "Gruppe7_FantasyGameCharacter.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -118,7 +114,7 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 	Mana = Cast<UFantasyGameInstance>(GetGameInstance())->GetMana();
 	SpellSelect = Cast<UFantasyGameInstance>(GetGameInstance())->GetCurrentSpell();
 
-	// LAG EN BEDRE TIMER.
+	// BRUK UNREALS TIMERSYSTEM.
 	if (SpellIsContinuous)
 	{	
 		++BadTimer;
@@ -129,7 +125,6 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		}
 	}
 
-	// LAG EN BEDRE TIMER.
 	if (PlayerHasPowerup)
 	{
 		++BadTimer2;
@@ -137,6 +132,27 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		{
 			AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver();
 			BadTimer2 = 0;
+		}
+	}
+
+	// Angreps delay.
+	if (AttackDelay)
+	{
+		++BadTimer3;
+		if (BadTimer3 > 30)
+		{
+			AttackDelay = false;
+			BadTimer3 = 0;
+		}
+	}
+
+	if (MagicDelay)
+	{
+		++BadTimer4;
+		if (BadTimer4 > 60)
+		{
+			MagicDelay = false;
+			BadTimer4 = 0;
 		}
 	}
 
@@ -210,7 +226,7 @@ void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
 		break;
 	case -1:
 		//SpellSelect = 3;
-		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Circle of Fire Selected"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Circle of Thorns Selected"));
 		break;
 	}
 }
@@ -257,46 +273,55 @@ void AGruppe7_FantasyGameCharacter::MoveRight(float Value)
 void AGruppe7_FantasyGameCharacter::PhysAttack()
 {	
 	// Legg til delay mellom angrep så de ikke kan spammes.
-
-	UWorld* World = GetWorld();
-	if (World)
+	if (!AttackDelay)
 	{
-		FVector Location = GetActorLocation();
-		FVector Offset = FVector(0.0f, 0.0f, 0.0f);
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			AttackDelay = true;
 
-		FRotator ProjectileRotation = GetActorRotation();
+			FVector Location = GetActorLocation();
+			FVector Offset = FVector(0.0f, 0.0f, 0.0f);
 
-		Location += Offset;
+			FRotator ProjectileRotation = GetActorRotation();
 
-		GetWorld()->SpawnActor<APhysAttackBox>(PhysAttackBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			Location += Offset;
 
-		//Spiller lyd.
-		//UGameplayStatics::PlaySound2D(GetWorld(), AttackSound, 1.f, 1.f, 0.f);
+			GetWorld()->SpawnActor<APhysAttackBox>(PhysAttackBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+
+			//Spiller lyd.
+			//UGameplayStatics::PlaySound2D(GetWorld(), AttackSound, 1.f, 1.f, 0.f);
+		}
 	}
 }
 
 void AGruppe7_FantasyGameCharacter::MagiProjectile()
-{
-	//Set the required mana for casting this spell.
-	float ManaRequirement{ 0.01f };
-
-	UWorld* World = GetWorld();
-	if (World && (Mana >= ManaRequirement))
+{	
+	if (!MagicDelay)
 	{
-		FVector Location = GetActorLocation();
-		FVector Offset = FVector(50.0f, 0.0f, 0.0f);
+		//Set the required mana for casting this spell.
+		float ManaRequirement{ 0.01f };
 
-		FRotator ProjectileRotation = GetActorRotation();
+		UWorld* World = GetWorld();
+		if (World && (Mana >= ManaRequirement))
+		{	
+			MagicDelay = true;
 
-		Location += Offset;
+			FVector Location = GetActorLocation();
+			FVector Offset = FVector(50.0f, 0.0f, 0.0f);
 
-		GetWorld()->SpawnActor<AMagicProjectile>(MagicProjectileBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			FRotator ProjectileRotation = GetActorRotation();
 
-		//Spiller skytelyd.
-		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
+			Location += Offset;
 
-		Cast<UFantasyGameInstance>(GetGameInstance())->DrainMana(ManaRequirement);
-		//Mana -= ManaRequirement;
+			GetWorld()->SpawnActor<AMagicProjectile>(MagicProjectileBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+
+			//Spiller skytelyd.
+			//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
+
+			Cast<UFantasyGameInstance>(GetGameInstance())->DrainMana(ManaRequirement);
+			//Mana -= ManaRequirement;
+		}
 	}
 }
 
@@ -326,7 +351,7 @@ void AGruppe7_FantasyGameCharacter::MagiFireCone()
 	}
 }
 
-void AGruppe7_FantasyGameCharacter::MagiFireCircle()
+void AGruppe7_FantasyGameCharacter::MagiThornCircle()
 {
 	//Set the required mana for casting this spell.
 	float ManaRequirement{ 0.01f };
@@ -341,7 +366,7 @@ void AGruppe7_FantasyGameCharacter::MagiFireCircle()
 
 		Location += Offset;
 
-		GetWorld()->SpawnActor<ACircleOfFire>(MagicFireCircleBlueprint, Location + GetActorForwardVector() * 1.f, GetActorRotation());
+		GetWorld()->SpawnActor<ACircleOfThorns>(MagicThornCircleBlueprint, Location + GetActorForwardVector() * 1.f, GetActorRotation());
 
 		//Spiller skytelyd.
 		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
@@ -383,7 +408,7 @@ void AGruppe7_FantasyGameCharacter::MagiAttack()
 		AGruppe7_FantasyGameCharacter::MagiFireCone();
 		break;
 	case 2:
-		AGruppe7_FantasyGameCharacter::MagiFireCircle();
+		AGruppe7_FantasyGameCharacter::MagiThornCircle();
 		break;
 	case 3:
 		AGruppe7_FantasyGameCharacter::MagiHealing();
@@ -436,15 +461,6 @@ void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
 
 	PlayerMovementSpeed = 1200.f;
 	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
-
-	// Få timer til å fungere.
-
-	//if (!PlayerHasPowerup)
-	//{
-	//	PlayerHasPowerup = true;
-
-	//	GetWorld()->GetTimerManager().SetTimer(PowerUpTimerHandle, this, &AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver, MaxPowerTime, false);
-	//}
 }
 
 void AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver()

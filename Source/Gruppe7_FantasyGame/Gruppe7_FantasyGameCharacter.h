@@ -45,7 +45,7 @@ public:
 
 	// Selects circle of fire.
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-		TSubclassOf<class ACircleOfFire> MagicFireCircleBlueprint;
+		TSubclassOf<class ACircleOfThorns> MagicThornCircleBlueprint;
 
 	// Selects physical hitbox.
 	UPROPERTY(EditAnywhere, Category = "Spawning")
@@ -119,7 +119,7 @@ protected:
 
 	void MagiFireCone();
 
-	void MagiFireCircle();
+	void MagiThornCircle();
 
 	void MagiHealing();
 
@@ -129,10 +129,18 @@ protected:
 
 	bool SpellIsContinuous = false;
 
+	bool AttackDelay = false;
+
+	bool MagicDelay = false;
+
 	// LAG BEDRE TIMER.
 	int BadTimer = 0;
 
 	int BadTimer2 = 0;
+
+	int BadTimer3 = 0;
+
+	int BadTimer4 = 0;
 
 	/** Item functions */
 	void ManaPotion();

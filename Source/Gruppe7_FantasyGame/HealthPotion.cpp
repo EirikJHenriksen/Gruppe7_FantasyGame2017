@@ -29,5 +29,10 @@ void AHealthPotion::Tick(float DeltaTime)
 
 	++Rotator;
 	SetActorRotation(FRotator(0.f, (1.f * Rotator), 0.f));
+
+	if (Rotator >= 360)
+	{
+		Rotator = 0;
+	}
 }
 
