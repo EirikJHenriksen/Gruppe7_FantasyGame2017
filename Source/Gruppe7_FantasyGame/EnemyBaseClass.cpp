@@ -4,7 +4,7 @@
 #include "EnemyBaseClass.h"
 #include "MagicProjectile.h"
 #include "ConeOfFire.h"
-#include "CircleOfFire.h"
+#include "CircleOfThorns.h"
 #include "PhysAttackBox.h"
 #include "Gruppe7_FantasyGameCharacter.h"
 #include "FantasyGameInstance.h"
@@ -138,11 +138,10 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 		HealthPoints -= 50.f;
 	}
 
-	// Circle of fine
-	if (OtherActor->IsA(ACircleOfFire::StaticClass()))
+	// Circle of thorns
+	if (OtherActor->IsA(ACircleOfThorns::StaticClass()))
 	{
-		OtherActor->Destroy();
-		HealthPoints -= 40.f;
+		HealthPoints -= 10.f;
 	}
 
 	// Cone of fire
