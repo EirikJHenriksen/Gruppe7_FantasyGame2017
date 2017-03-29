@@ -72,8 +72,11 @@ public:
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
 	// VFX.
-	//UPROPERTY(EditAnywhere)
-		//UParticleSystem *PickUpFX;
+	UPROPERTY(EditAnywhere, Category = "VFX")
+		UParticleSystem *HealthPickUpFX;
+
+	UPROPERTY(EditAnywhere, Category = "VFX")
+		UParticleSystem *ManaPickUpFX;
 
 	// SFX.
 	//UPROPERTY(EditAnywhere)

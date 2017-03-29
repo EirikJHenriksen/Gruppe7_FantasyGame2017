@@ -81,8 +81,8 @@ void AGruppe7_FantasyGameCharacter::SetupPlayerInputComponent(class UInputCompon
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	//PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	//Magic and physical attacks.
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::PhysAttack);
@@ -96,8 +96,8 @@ void AGruppe7_FantasyGameCharacter::SetupPlayerInputComponent(class UInputCompon
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGruppe7_FantasyGameCharacter::MoveRight);
 
 	// Jumping.
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AGruppe7_FantasyGameCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AGruppe7_FantasyGameCharacter::TouchStopped);
+	//PlayerInputComponent->BindTouch(IE_Pressed, this, &AGruppe7_FantasyGameCharacter::TouchStarted);
+	//PlayerInputComponent->BindTouch(IE_Released, this, &AGruppe7_FantasyGameCharacter::TouchStopped);
 }
 
 void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
@@ -232,15 +232,15 @@ void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
 	}
 }
 
-void AGruppe7_FantasyGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		Jump();
-}
+//void AGruppe7_FantasyGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+//{
+//		Jump();
+//}
 
-void AGruppe7_FantasyGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
-}
+//void AGruppe7_FantasyGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+//{
+//		StopJumping();
+//}
 
 void AGruppe7_FantasyGameCharacter::MoveForward(float Value)
 {
@@ -430,7 +430,7 @@ void AGruppe7_FantasyGameCharacter::ManaPotion()
 	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreMana(ManaRestore);
 
 	//Spiller av VFX.
-	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ManaPickUpFX, GetTransform(), true);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ManaPickUpFX, GetTransform(), true);
 
 	//Spiller av SFX.
 	//UGameplayStatics::PlaySound2D(GetWorld(), ManaPickUpSound, 1.f, 1.f, 0.f);
@@ -444,7 +444,7 @@ void AGruppe7_FantasyGameCharacter::HealthPotion()
 	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(HealthRestore);
 
 	//Spiller av VFX.
-	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HealthPickUpFX, GetTransform(), true);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HealthPickUpFX, GetTransform(), true);
 
 	//Spiller av SFX.
 	//UGameplayStatics::PlaySound2D(GetWorld(), HealthPickUpSound, 1.f, 1.f, 0.f);
