@@ -118,21 +118,13 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 	// BRUK UNREALS TIMERSYSTEM.
 	if (SpellIsContinuous)
 	{	
+		//GetWorldTimerManager().SetTimer(ContinuousSpellTimerHandle, this, &AGruppe7_FantasyGameCharacter::MagiAttack, 0.2f, false);
+
 		++BadTimer;
 		if (BadTimer > 30)
 		{
 			AGruppe7_FantasyGameCharacter::MagiAttack();
 			BadTimer = 0;
-		}
-	}
-
-	if (PlayerHasPowerup)
-	{
-		++BadTimer2;
-		if (BadTimer2 > 600)
-		{
-			AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver();
-			BadTimer2 = 0;
 		}
 	}
 
@@ -454,6 +446,9 @@ void AGruppe7_FantasyGameCharacter::PowerUp_Speed()
 {	
 	// Power-up som booster movement speed.
 
+	// Timer system.
+	GetWorldTimerManager().SetTimer(SpeedPowerUpTimerHandle, this, &AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver, SpeedPowerUpDuration, false);
+
 	// DEBUG.
 	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("Power-up activated!"));
 
@@ -474,7 +469,7 @@ void AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver()
 	PlayerMovementSpeed = 600.f;
 	GetCharacterMovement()->MaxWalkSpeed = PlayerMovementSpeed;
 
-	GetWorld()->GetTimerManager().ClearTimer(PowerUpTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(SpeedPowerUpTimerHandle);
 }
 
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)

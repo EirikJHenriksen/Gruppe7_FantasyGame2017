@@ -101,12 +101,13 @@ protected:
 	///////////////////////////////////////////////////////////////////////////
 	// Power-Up Variables.
 
+	/* Handle for power-up timer */
+	FTimerHandle SpeedPowerUpTimerHandle;
+
 	bool PlayerHasPowerup;
 
-	float MaxPowerTime{ 5.f };
-
-	/* Handle for power-up timer */
-	FTimerHandle PowerUpTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timers")
+		float SpeedPowerUpDuration = 10.f;
 
 
 	/** Called for forward/backward input */
@@ -136,7 +137,9 @@ protected:
 
 	bool MagicDelay = false;
 
-	// LAG BEDRE TIMER.
+	// Attack/Spell timers.
+	
+	//FTimerHandle ContinuousSpellTimerHandle;
 	int BadTimer = 0;
 
 	int BadTimer2 = 0;
@@ -156,10 +159,10 @@ protected:
 
 
 	/** Handler for when jump input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+	//void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
 
 	/** Handler for when jump input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+	//void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 protected:
 	// APawn interface
