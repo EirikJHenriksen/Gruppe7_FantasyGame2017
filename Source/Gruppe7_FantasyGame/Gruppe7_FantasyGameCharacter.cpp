@@ -8,6 +8,7 @@
 #include "ManaPotion.h"
 #include "HealthPotion.h"
 #include "PowerUp_Speed.h"
+#include "EnemyAttackBox.h"
 #include "FantasyGameInstance.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
@@ -478,6 +479,24 @@ void AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver()
 
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {	
+	////////////////////////////////////////////////////////////////////////////////
+	// ENEMY ATTACKS.
+
+	if (OtherActor->IsA(AEnemyAttackBox::StaticClass()))
+	{
+		OtherActor->Destroy();
+
+		Cast<UFantasyGameInstance>(GetGameInstance())->DrainHealth(0.1f);
+
+		if (Health <= 0.f)
+		{	
+			// DEBUG - Erstatt med en effekt?
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
+
+			Destroy();
+		}
+	}
+
 	////////////////////////////////////////////////////////////////////////////////
 	// POTIONS AND RESTORATIVE ITEMS.
 

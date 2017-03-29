@@ -8,10 +8,7 @@
 #include "PhysAttackBox.h"
 #include "Gruppe7_FantasyGameCharacter.h"
 #include "FantasyGameInstance.h"
-//DEBUG.
-#include <EngineGlobals.h>
-#include <Runtime/Engine/Classes/Engine/Engine.h>
-//DEBUG.
+#include "EnemyAttackBox.h"
 
 
 // Sets default values
@@ -42,6 +39,33 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 
 	// Checks distance between player and enemy.
 	DistanceCheck();
+
+	// Enemy physical attack.
+	if (AttackTarget)
+	{
+		++BadTimer;
+		if (BadTimer > 60)
+		{
+			AEnemyBaseClass::Attack();
+			BadTimer = 0;
+		}
+	}
+}
+
+void AEnemyBaseClass::Attack()
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FVector Location = GetActorLocation();
+		FVector Offset = FVector(0.0f, 0.0f, 0.0f);
+
+		FRotator ProjectileRotation = GetActorRotation();
+
+		Location += Offset;
+
+		GetWorld()->SpawnActor<AEnemyAttackBox>(EnemyAttackBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+	}
 }
 
 void AEnemyBaseClass::DistanceCheck()
@@ -84,6 +108,11 @@ void AEnemyBaseClass::DistanceCheck()
 		// DEBUG.
 		////GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ENEMY STOPS ATTACKING PLAYER!!!"));
 	}
+}
+
+float AEnemyBaseClass::GetDistanceToPlayer()
+{
+	return DistanceFloat;
 }
 
 // Called to bind functionality to input

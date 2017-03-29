@@ -14,15 +14,27 @@ public:
 	// Sets default values for this character's properties
 	AEnemyBaseClass();
 
+	// Selects physical hitbox.
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AEnemyAttackBox> EnemyAttackBlueprint;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	/////////////////
+	// Timer.
+	int BadTimer;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void Attack();
+
 	void DistanceCheck();
+
+	float GetDistanceToPlayer();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

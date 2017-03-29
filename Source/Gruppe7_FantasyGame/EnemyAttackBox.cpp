@@ -1,14 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Gruppe7_FantasyGame.h"
-#include "Gruppe7_FantasyGameCharacter.h"
-#include "PhysAttackBox.h"
+#include "EnemyAttackBox.h"
 
 
 // Sets default values
-APhysAttackBox::APhysAttackBox()
+AEnemyAttackBox::AEnemyAttackBox()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Collision object and RootObject
@@ -19,16 +18,16 @@ APhysAttackBox::APhysAttackBox()
 }
 
 // Called when the game starts or when spawned
-void APhysAttackBox::BeginPlay()
+void AEnemyAttackBox::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// DEBUG.
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("PHYSICAL ATTACK!"));
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("ENEMY - PHYSICAL ATTACK!"));
 }
 
 // Called every frame
-void APhysAttackBox::Tick(float DeltaTime)
+void AEnemyAttackBox::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
