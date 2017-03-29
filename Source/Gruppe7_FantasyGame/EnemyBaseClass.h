@@ -36,8 +36,10 @@ public:
 
 	float GetDistanceToPlayer();
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	FVector GetMyStartLocation();
+
+	//// Called to bind functionality to input
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Overlap function.
 	UFUNCTION()
@@ -67,4 +69,7 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 		float HealthPoints = 100.f;
+
+	UPROPERTY(EditAnywhere)
+		FVector MyStartLocation;
 };

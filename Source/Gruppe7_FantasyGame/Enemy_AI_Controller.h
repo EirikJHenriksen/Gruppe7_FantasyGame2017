@@ -26,4 +26,6 @@ public:
 
 	uint8 EnemyKeyID;
 
+	virtual void Tick(float DeltaTime) override;
+
 };

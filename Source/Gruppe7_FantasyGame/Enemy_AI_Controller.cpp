@@ -33,3 +33,33 @@ void AEnemy_AI_Controller::Possess(APawn *InPawn)
 			BehaviorComp->StartTree(*Char->BotBehavior);
 		}
 }
+
+
+// Called every frame
+void AEnemy_AI_Controller::Tick(float DeltaTime)
+{
+Super::Tick(DeltaTime);
+
+// Get distance
+float Distance = Cast<AEnemyBaseClass>(GetCharacter())->GetDistanceToPlayer();
+
+
+// If distance is less than ~300.f 
+if (Distance < 700.f)
+	{
+		// runs to the player
+		MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("close - following"));
+	} else if (Distance > 700.f)
+	{
+		// runs to the player
+		//MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
+		//StopMovement();
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("far away - going home"));
+		// go home
+		FVector MyHome = Cast<AEnemyBaseClass>(GetCharacter())->GetMyStartLocation();
+		MoveToLocation(MyHome, 5.f, true, true, true, true, 0,true);
+	}
+
+
+}

@@ -30,6 +30,8 @@ void AEnemyBaseClass::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	MyStartLocation = GetActorLocation();
+
 }
 
 // Called every frame
@@ -115,13 +117,16 @@ float AEnemyBaseClass::GetDistanceToPlayer()
 	return DistanceFloat;
 }
 
-// Called to bind functionality to input
-void AEnemyBaseClass::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+FVector AEnemyBaseClass::GetMyStartLocation() {	return MyStartLocation; }
 
-}
+//// Called to bind functionality to input
+//void AEnemyBaseClass::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+//{
+//	Super::SetupPlayerInputComponent(PlayerInputComponent);
+//
+//}
 
+// When attacked by player
 void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
 	// Physic attack
@@ -150,13 +155,12 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 		OtherActor->Destroy();
 		HealthPoints -= 40.f;
 	}
-
 	DeathCheck();
 }
 
+// Check if dead
 void AEnemyBaseClass::DeathCheck()
 {
-	//check if dead
 	if (HealthPoints <= 0.f)
 	{
 		Destroy();
