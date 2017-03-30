@@ -5,6 +5,15 @@
 #include "GameFramework/Character.h"
 #include "EnemyBaseClass.generated.h"
 
+// A enum class that hold the kinds of elements enemies can belong to 
+UENUM(BlueprintType) //"BlueprintType" is essential to include
+enum class ElementsEnum : uint8
+{
+	FIRE,
+	WATER,
+	NATURE 
+};
+
 UCLASS()
 class GRUPPE7_FANTASYGAME_API AEnemyBaseClass : public ACharacter
 {
@@ -18,25 +27,17 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AEnemyAttackBox> EnemyAttackBlueprint;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	/////////////////
-	// Timer.
-	int BadTimer;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Attack();
+	void MeleeAttack();
 
-	void DistanceCheck();
-
+	// getters
 	float GetDistanceToPlayer();
-
 	FVector GetMyStartLocation();
+
+	// sets DistanceToPlayer
+	void UpdateDistance();
 
 	//// Called to bind functionality to input
 	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -44,32 +45,50 @@ public:
 	// Overlap function.
 	UFUNCTION()
 	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
-	
+
 	void DeathCheck();
 
+	// Should safely remove this at some point...
 	UPROPERTY(EditAnywhere, Category = Behavior)
 		class UBehaviorTree *BotBehavior;
 
-	///////////////////////////////////////
 	// Distance detection variables.
-	FVector TargetCharacterLoc;
-
+	FVector PlayerLocation;
 	FVector DistanceVector;
-
 	float DistanceFloat;
 
-	float EngageRange = 500.f;
+	// Elements for enemie
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+		ElementsEnum Element;
 
-	float AttackRange = 100.f;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
-	bool EngageTarget = false;
-
-	bool AttackTarget = false;
+	/////////////////
+	// Timer. currently based on frames not real time
+	int BadTimer;
 
 private:
+	// enemies HP
 	UPROPERTY(EditAnywhere)
 		float HealthPoints = 100.f;
 
+	// saves where player starts, used to go back "home"
 	UPROPERTY(EditAnywhere)
 		FVector MyStartLocation;
+
+	// holds the distance between enemy and player
+	float DistanceToPlayer = 1000.f; // just initializing a arbitrary value
+
+	// How much different attacks hurt
+	float DamageMelee = 20.f;
+	// these are used depending on the enemies element type and the magic attacks element type
+	float DamageMyWeakness = 60.f;
+	float DamageMyEqual = 25.f;
+	float DamageLeastEffective = 10.f;
+
+	// Sounds
+	UPROPERTY(EditAnywhere)
+		USoundBase* EnemyDeathSound;
 };

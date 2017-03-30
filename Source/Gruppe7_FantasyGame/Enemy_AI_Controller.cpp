@@ -49,13 +49,13 @@ if (Distance < 700.f)
 	{
 		// runs to the player
 		MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("close - following"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("close - following"));
 	} else if (Distance > 700.f)
 	{
 		// runs to the player
 		//MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
 		//StopMovement();
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("far away - going home"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("far away - going home"));
 		// go home
 		FVector MyHome = Cast<AEnemyBaseClass>(GetCharacter())->GetMyStartLocation();
 		MoveToLocation(MyHome, 5.f, true, true, true, true, 0,true);

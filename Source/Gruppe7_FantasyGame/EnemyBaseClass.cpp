@@ -39,22 +39,23 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Checks distance between player and enemy.
-	DistanceCheck();
+	// Updates DistanceToPlayer
+	UpdateDistance();
 
 	// Enemy physical attack.
-	if (AttackTarget)
+	if (DistanceToPlayer < 100.f)
 	{
 		++BadTimer;
 		if (BadTimer > 60)
 		{
-			AEnemyBaseClass::Attack();
+			AEnemyBaseClass::MeleeAttack();
 			BadTimer = 0;
 		}
 	}
 }
 
-void AEnemyBaseClass::Attack()
+// the enemies melee attack
+void AEnemyBaseClass::MeleeAttack()
 {
 	UWorld* World = GetWorld();
 	if (World)
@@ -70,61 +71,19 @@ void AEnemyBaseClass::Attack()
 	}
 }
 
-void AEnemyBaseClass::DistanceCheck()
-{
-	TargetCharacterLoc = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
-
-	DistanceVector = GetActorLocation() - TargetCharacterLoc;
-
-	DistanceFloat = DistanceVector.Size();
-
-	// Enemy starts following player.
-	if (DistanceFloat <= EngageRange)
-	{
-		EngageTarget = true;
-		// DEBUG.
-		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ENEMY MOVES TOWARDS PLAYER!!!"));
-	}
-
-	// DEBUG.
-	// Enemy stops following player.
-	if (DistanceFloat <= EngageRange)
-	{
-		EngageTarget = true;
-		// DEBUG.
-		////GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ENEMY STOPS MOVING TOWARDS PLAYER!!!"));
-	}
-
-	// Enemy starts attacking player.
-	if (DistanceFloat <= AttackRange)
-	{
-		AttackTarget = true;
-		// DEBUG.
-		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ENEMY ATTACKS PLAYER!!!"));
-	}
-
-	// Enemy stops attacking player.
-	if (DistanceFloat >= AttackRange)
-	{
-		AttackTarget = false;
-		// DEBUG.
-		////GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ENEMY STOPS ATTACKING PLAYER!!!"));
-	}
-}
-
-float AEnemyBaseClass::GetDistanceToPlayer()
-{
-	return DistanceFloat;
-}
-
+// getters
+float AEnemyBaseClass::GetDistanceToPlayer() {	return DistanceToPlayer; }
 FVector AEnemyBaseClass::GetMyStartLocation() {	return MyStartLocation; }
 
-//// Called to bind functionality to input
-//void AEnemyBaseClass::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-//{
-//	Super::SetupPlayerInputComponent(PlayerInputComponent);
-//
-//}
+// gets the distance to player
+void AEnemyBaseClass::UpdateDistance()
+{
+	PlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
+
+	DistanceVector = GetActorLocation() - PlayerLocation;
+
+	DistanceToPlayer = DistanceVector.Size();
+}
 
 // When attacked by player
 void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
@@ -133,27 +92,77 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 	if (OtherActor->IsA(APhysAttackBox::StaticClass()))
 	{
 		OtherActor->Destroy();
-		HealthPoints -= 40.f;
+		HealthPoints -= DamageMelee;
 	}
 
-	// Magic Projectile
+	// Magic Projectile - WATER
 	if (OtherActor->IsA(AMagicProjectile::StaticClass()))
 	{
 		OtherActor->Destroy();
-		HealthPoints -= 50.f;
+
+		switch (Element)
+		{
+		case ElementsEnum::FIRE:
+			// weak
+			HealthPoints -= DamageMyWeakness;
+			break;
+		case ElementsEnum::WATER:
+			// ok
+			HealthPoints -= DamageMyEqual;
+			break;
+		case ElementsEnum::NATURE:
+			// heal?
+			HealthPoints -= DamageLeastEffective;
+			break;
+		default:
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("error - EnemyBaseClass - attacked"));
+		}
 	}
 
-	// Circle of thorns
+	// Circle of thorns - NATURE
 	if (OtherActor->IsA(ACircleOfThorns::StaticClass()))
 	{
-		HealthPoints -= 10.f;
+		switch (Element)
+		{
+		case ElementsEnum::WATER:
+			// weak
+			HealthPoints -= DamageMyWeakness;
+			break;
+		case ElementsEnum::NATURE:
+			// ok
+			HealthPoints -= DamageMyEqual;
+			break;
+		case ElementsEnum::FIRE:
+			// heal?
+			HealthPoints -= DamageLeastEffective;
+			break;
+		default:
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("error - EnemyBaseClass - attacked"));
+		}
 	}
 
-	// Cone of fire
+	// Cone of fire - FIRE
 	if (OtherActor->IsA(AConeOfFire::StaticClass()))
 	{
 		OtherActor->Destroy();
-		HealthPoints -= 40.f;
+
+		switch (Element)
+		{
+		case ElementsEnum::NATURE:
+			// weak
+			HealthPoints -= DamageMyWeakness;
+			break;
+		case ElementsEnum::FIRE:
+			// ok
+			HealthPoints -= DamageMyEqual;
+			break;
+		case ElementsEnum::WATER:
+			// heal?
+			HealthPoints -= DamageLeastEffective;
+			break;
+		default:
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("error - EnemyBaseClass - attacked"));
+		}
 	}
 	DeathCheck();
 }
@@ -163,6 +172,7 @@ void AEnemyBaseClass::DeathCheck()
 {
 	if (HealthPoints <= 0.f)
 	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EnemyDeathSound, GetActorLocation());
 		Destroy();
 	}
 }
