@@ -139,14 +139,12 @@ protected:
 
 	// Attack/Spell timers.
 	
-	//FTimerHandle ContinuousSpellTimerHandle;
-	int BadTimer = 0;
+	float SpellContTimer = 0.f;
 
-	int BadTimer2 = 0;
+	float AttackTimer = 0.f;
 
-	int BadTimer3 = 0;
+	float MagicTimer = 0.f;
 
-	int BadTimer4 = 0;
 
 	/** Item functions */
 	void ManaPotion();

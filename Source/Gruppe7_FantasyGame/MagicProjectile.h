@@ -21,7 +21,7 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	// What happens when destroyed.
-	//void Destroy();
+	void Destroy();
 
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
@@ -47,7 +47,7 @@ public:
 
 	// VFX.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFXs")
-		UParticleSystem *ImpactSparkFX;
+		UParticleSystem *ImpactMagicFX;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFXs")
 		UParticleSystem *MagiSpark;

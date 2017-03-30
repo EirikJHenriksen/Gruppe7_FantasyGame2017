@@ -115,37 +115,36 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 	Mana = Cast<UFantasyGameInstance>(GetGameInstance())->GetMana();
 	SpellSelect = Cast<UFantasyGameInstance>(GetGameInstance())->GetCurrentSpell();
 
-	// BRUK UNREALS TIMERSYSTEM.
+	// TIMERS.
 	if (SpellIsContinuous)
 	{	
-		//GetWorldTimerManager().SetTimer(ContinuousSpellTimerHandle, this, &AGruppe7_FantasyGameCharacter::MagiAttack, 0.2f, false);
-
-		++BadTimer;
-		if (BadTimer > 30)
+		SpellContTimer += 1.f;
+		if (SpellContTimer > 30.f)
 		{
 			AGruppe7_FantasyGameCharacter::MagiAttack();
-			BadTimer = 0;
+			SpellContTimer = 0.f;
 		}
 	}
 
 	// Angreps delay.
 	if (AttackDelay)
 	{
-		++BadTimer3;
-		if (BadTimer3 > 30)
+		AttackTimer += 1.f;
+		if (AttackTimer > 30.f)
 		{
 			AttackDelay = false;
-			BadTimer3 = 0;
+			AttackTimer = 0.f;
 		}
 	}
 
+	// Magi delay.
 	if (MagicDelay)
 	{
-		++BadTimer4;
-		if (BadTimer4 > 60)
+		MagicTimer += 1.f;
+		if (MagicTimer > 60.f)
 		{
 			MagicDelay = false;
-			BadTimer4 = 0;
+			MagicTimer = 0.f;
 		}
 	}
 
