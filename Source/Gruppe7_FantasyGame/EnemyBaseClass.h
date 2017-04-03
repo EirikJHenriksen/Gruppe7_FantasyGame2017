@@ -91,4 +91,10 @@ private:
 	// Sounds
 	UPROPERTY(EditAnywhere)
 		USoundBase* EnemyDeathSound;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* EnemyHurtSound;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* EnemyMeleeAttackSound;
 };

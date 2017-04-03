@@ -10,19 +10,16 @@
 #include "FantasyGameInstance.h"
 #include "EnemyAttackBox.h"
 
-
 // Sets default values
 AEnemyBaseClass::AEnemyBaseClass()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	GetCapsuleComponent()->bGenerateOverlapEvents = true;
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyBaseClass::OnOverlap);
-
 }
 
 // Called when the game starts or when spawned
@@ -31,7 +28,6 @@ void AEnemyBaseClass::BeginPlay()
 	Super::BeginPlay();
 	
 	MyStartLocation = GetActorLocation();
-
 }
 
 // Called every frame
@@ -68,6 +64,8 @@ void AEnemyBaseClass::MeleeAttack()
 		Location += Offset;
 
 		GetWorld()->SpawnActor<AEnemyAttackBox>(EnemyAttackBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EnemyMeleeAttackSound, GetActorLocation());
 	}
 }
 
@@ -144,8 +142,6 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 	// Cone of fire - FIRE
 	if (OtherActor->IsA(AConeOfFire::StaticClass()))
 	{
-		OtherActor->Destroy();
-
 		switch (Element)
 		{
 		case ElementsEnum::NATURE:
@@ -174,5 +170,8 @@ void AEnemyBaseClass::DeathCheck()
 	{
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EnemyDeathSound, GetActorLocation());
 		Destroy();
+	}
+	else {
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EnemyHurtSound, GetActorLocation());
 	}
 }

@@ -13,9 +13,9 @@
 
 AEnemy_AI_Controller::AEnemy_AI_Controller()
 {
-	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
+	//BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
 
-	BehaviorComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorComp"));
+	//BehaviorComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorComp"));
 }
 
 void AEnemy_AI_Controller::Possess(APawn *InPawn)
@@ -24,16 +24,15 @@ void AEnemy_AI_Controller::Possess(APawn *InPawn)
 
 	AEnemyBaseClass *Char = Cast<AEnemyBaseClass>(InPawn);
 
-		if (Char && Char->BotBehavior)
-		{
-			BlackboardComp->InitializeBlackboard(*Char->BotBehavior->BlackboardAsset);
+		//if (Char && Char->BotBehavior)
+		//{
+		//	BlackboardComp->InitializeBlackboard(*Char->BotBehavior->BlackboardAsset);
 
-			EnemyKeyID = BlackboardComp->GetKeyID("Target");
+		//	EnemyKeyID = BlackboardComp->GetKeyID("Target");
 
-			BehaviorComp->StartTree(*Char->BotBehavior);
-		}
+		//	BehaviorComp->StartTree(*Char->BotBehavior);
+		//}
 }
-
 
 // Called every frame
 void AEnemy_AI_Controller::Tick(float DeltaTime)
@@ -49,17 +48,13 @@ if (Distance < 700.f)
 	{
 		// runs to the player
 		MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
-		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("close - following"));
+
 	} else if (Distance > 700.f)
 	{
 		// runs to the player
-		//MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
-		//StopMovement();
-		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Orange, TEXT("far away - going home"));
+
 		// go home
 		FVector MyHome = Cast<AEnemyBaseClass>(GetCharacter())->GetMyStartLocation();
 		MoveToLocation(MyHome, 5.f, true, true, true, true, 0,true);
 	}
-
-
 }
