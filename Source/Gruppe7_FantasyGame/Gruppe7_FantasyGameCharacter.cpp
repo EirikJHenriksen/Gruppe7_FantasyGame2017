@@ -56,14 +56,14 @@ AGruppe7_FantasyGameCharacter::AGruppe7_FantasyGameCharacter()
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/Textures/M_Cursor_Decal.M_Cursor_Decal'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/Textures/PawDecal_MAT.PawDecal_MAT'"));
 	
 	if (DecalMaterialAsset.Succeeded())
 	{
 		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
 	}
 	
-	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
+	CursorToWorld->DecalSize = FVector(32.0f, 64.0f, 64.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 
 	// Activate ticking in order to update the cursor every frame.
@@ -159,7 +159,8 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		FVector CursorFV = Hit.ImpactNormal;
 		FRotator CursorR = CursorFV.Rotation();
 		CursorToWorld->SetWorldLocation(Hit.Location);
-		CursorToWorld->SetWorldRotation(CursorR);
+		//CursorToWorld->SetWorldRotation(CursorR);
+		CursorToWorld->RelativeRotation = FRotator(90.f, 180.f, 90.f);
 
 		FVector CursorLocation = Hit.Location;
 		UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());
@@ -170,6 +171,11 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		NewDirection.Normalize();
 		SetActorRotation(NewDirection.Rotation());
 	}
+
+
+
+
+
 }
 
 void AGruppe7_FantasyGameCharacter::SpellSwapUp()
