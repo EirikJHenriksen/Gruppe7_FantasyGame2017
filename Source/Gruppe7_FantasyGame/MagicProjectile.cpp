@@ -75,10 +75,11 @@ void AMagicProjectile::FireInDirection(const FVector& ShootDirection)
 //	}
 //}
 
-//void AMagicProjectile::Destroy()
-//{
-//	Super::Destroy();
-//
-//	//Spiller av VFX.
-//	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactSparkFX, GetTransform(), true);
-//}
+void AMagicProjectile::Destroy()
+{
+	Super::Destroy();
+
+	//Spiller av VFX.
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactMagicFX, GetTransform(), true);
+	//Lyd effekter?
+}
