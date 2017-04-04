@@ -170,11 +170,6 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		NewDirection.Normalize();
 		SetActorRotation(NewDirection.Rotation());
 	}
-
-
-
-
-
 }
 
 void AGruppe7_FantasyGameCharacter::SpellSwapUp()
@@ -298,7 +293,7 @@ void AGruppe7_FantasyGameCharacter::MagiProjectile()
 	if (!MagicDelay)
 	{
 		//Set the required mana for casting this spell.
-		float ManaRequirement{ 0.01f };
+		float ManaRequirement{ 0.05f };
 
 		UWorld* World = GetWorld();
 		if (World && (Mana >= ManaRequirement))
@@ -328,7 +323,7 @@ void AGruppe7_FantasyGameCharacter::MagiFireCone()
 	SpellIsContinuous = true;
 
 	//Set the required mana for casting this spell.
-	float ManaRequirement{ 0.01f };
+	float ManaRequirement{ 0.075f };
 
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
@@ -352,7 +347,7 @@ void AGruppe7_FantasyGameCharacter::MagiFireCone()
 void AGruppe7_FantasyGameCharacter::MagiThornCircle()
 {
 	//Set the required mana for casting this spell.
-	float ManaRequirement{ 0.01f };
+	float ManaRequirement{ 0.2f };
 
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
@@ -383,8 +378,8 @@ void AGruppe7_FantasyGameCharacter::MagiHealing()
 	if (Health != 1.f)
 	{
 		//Set the required mana for casting this spell.
-		float ManaRequirement{ 0.01f };
-		float HealthRestoration{ 0.1f };
+		float ManaRequirement{ 0.02f };
+		float HealthRestoration{ 0.01f };
 
 		// DEBUG.
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("HEALING!!!"));
