@@ -61,6 +61,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		ElementsEnum Element;
 
+	void ClearSightCheck();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

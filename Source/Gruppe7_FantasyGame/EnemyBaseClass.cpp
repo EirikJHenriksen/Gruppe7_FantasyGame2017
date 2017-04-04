@@ -175,3 +175,9 @@ void AEnemyBaseClass::DeathCheck()
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EnemyHurtSound, GetActorLocation());
 	}
 }
+
+// line trace to check if enemy sees player, or if line of sight is blocked
+void AEnemyBaseClass::ClearSightCheck()
+{
+	//UWorld::LineTraceSingleByChannel(GetActorLocation(), Cast<AGruppe7_FantasyGameCharacter>(GetActorLocation()), ECollisionChannel::ECC_Visibility, );
+}
