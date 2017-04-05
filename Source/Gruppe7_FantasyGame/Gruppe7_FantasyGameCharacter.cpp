@@ -375,7 +375,7 @@ void AGruppe7_FantasyGameCharacter::MagiHealing()
 	// DEBUG.
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("ATTEMPT AT HEALING!!!"));
 
-	if (Health != 1.f)
+	if (Health != 1.f && Mana >= 0.f)
 	{
 		//Set the required mana for casting this spell.
 		float ManaRequirement{ 0.02f };
