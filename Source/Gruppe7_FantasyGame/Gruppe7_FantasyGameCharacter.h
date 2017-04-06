@@ -119,8 +119,6 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
-	void Rotate(float Value);
-
 	/** Called for attacks */
 	void PhysAttack();
 
