@@ -26,7 +26,7 @@ public:
 		UShapeComponent* RootBox;
 	
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 0.5f;
+		float TimeBeforeDestroy = 0.1f;
 
 		float TimeLived{ 0 };
 };

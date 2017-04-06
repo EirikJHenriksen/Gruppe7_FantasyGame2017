@@ -54,4 +54,12 @@ public:
 	void SetPlayerLocation(FVector Location);
 	
 	FVector GetPlayerLocation();
+
+	void UFantasyGameInstance::SelectWater();
+
+	void UFantasyGameInstance::SelectFire();
+
+	void UFantasyGameInstance::SelectThorns();
+
+	void UFantasyGameInstance::SelectHealing();
 };

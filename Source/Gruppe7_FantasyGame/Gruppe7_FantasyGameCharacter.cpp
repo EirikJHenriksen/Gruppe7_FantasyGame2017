@@ -84,20 +84,22 @@ void AGruppe7_FantasyGameCharacter::SetupPlayerInputComponent(class UInputCompon
 	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	//PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	//Magic and physical attacks.
+	// Magic and physical attacks.
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::PhysAttack);
 	PlayerInputComponent->BindAction("CastSpell", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::MagiAttack);
 	PlayerInputComponent->BindAction("CastSpell", IE_Released, this, &AGruppe7_FantasyGameCharacter::MagiAttackStop);
 	PlayerInputComponent->BindAction("SpellSwapUp", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapUp);
 	PlayerInputComponent->BindAction("SpellSwapDown", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapDown);
 
+	// Spell selection.
+	PlayerInputComponent->BindAction("Water", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SelectWater);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SelectFire);
+	PlayerInputComponent->BindAction("Thorns", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SelectThorns);
+	PlayerInputComponent->BindAction("Healing", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SelectHealing);
+
 	// WASD - Movement.
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGruppe7_FantasyGameCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGruppe7_FantasyGameCharacter::MoveRight);
-
-	// Jumping.
-	//PlayerInputComponent->BindTouch(IE_Pressed, this, &AGruppe7_FantasyGameCharacter::TouchStarted);
-	//PlayerInputComponent->BindTouch(IE_Released, this, &AGruppe7_FantasyGameCharacter::TouchStopped);
 }
 
 void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
@@ -224,15 +226,25 @@ void AGruppe7_FantasyGameCharacter::SpellSwap(bool SwapUp)
 	}
 }
 
-//void AGruppe7_FantasyGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-//{
-//		Jump();
-//}
+void AGruppe7_FantasyGameCharacter::SelectWater()
+{
+	Cast<UFantasyGameInstance>(GetGameInstance())->SelectWater();
+}
 
-//void AGruppe7_FantasyGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-//{
-//		StopJumping();
-//}
+void AGruppe7_FantasyGameCharacter::SelectFire()
+{
+	Cast<UFantasyGameInstance>(GetGameInstance())->SelectFire();
+}
+
+void AGruppe7_FantasyGameCharacter::SelectThorns()
+{
+	Cast<UFantasyGameInstance>(GetGameInstance())->SelectThorns();
+}
+
+void AGruppe7_FantasyGameCharacter::SelectHealing()
+{
+	Cast<UFantasyGameInstance>(GetGameInstance())->SelectHealing();
+}
 
 void AGruppe7_FantasyGameCharacter::MoveForward(float Value)
 {
@@ -482,6 +494,8 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 		OtherActor->Destroy();
 
 		Cast<UFantasyGameInstance>(GetGameInstance())->DrainHealth(0.1f);
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
 
 		if (Health <= 0.f)
 		{	

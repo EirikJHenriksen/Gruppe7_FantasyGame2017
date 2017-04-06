@@ -78,6 +78,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "VFX")
 		UParticleSystem *ManaPickUpFX;
 
+	UPROPERTY(EditAnywhere, Category = "VFX")
+		UParticleSystem *HitFX;
+
 	// SFX.
 	//UPROPERTY(EditAnywhere)
 		//USoundBase* PickUpSound;
@@ -174,6 +177,15 @@ protected:
 	void SpellSwapDown();
 
 	void SpellSwap(bool SwapUp);
+
+	void SelectWater();
+
+	void SelectFire();
+
+	void SelectThorns();
+
+	void SelectHealing();
+
 	// End of APawn interface
 
 public:

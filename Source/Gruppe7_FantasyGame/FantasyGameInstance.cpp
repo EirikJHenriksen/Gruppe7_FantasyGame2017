@@ -95,3 +95,23 @@ FVector UFantasyGameInstance::GetPlayerLocation()
 {
 	return PlayerLocation;
 }
+
+void UFantasyGameInstance::SelectWater()
+{
+	SpellSelect = 0;
+}
+
+void UFantasyGameInstance::SelectFire()
+{
+	SpellSelect = 1;
+}
+
+void UFantasyGameInstance::SelectThorns()
+{
+	SpellSelect = 2;
+}
+
+void UFantasyGameInstance::SelectHealing()
+{
+	SpellSelect = 3;
+}
