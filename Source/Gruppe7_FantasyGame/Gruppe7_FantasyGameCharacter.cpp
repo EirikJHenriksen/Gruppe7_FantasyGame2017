@@ -90,6 +90,8 @@ void AGruppe7_FantasyGameCharacter::SetupPlayerInputComponent(class UInputCompon
 	PlayerInputComponent->BindAction("CastSpell", IE_Released, this, &AGruppe7_FantasyGameCharacter::MagiAttackStop);
 	PlayerInputComponent->BindAction("SpellSwapUp", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapUp);
 	PlayerInputComponent->BindAction("SpellSwapDown", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SpellSwapDown);
+	
+	PlayerInputComponent->BindAxis("MouseInput", this, &AGruppe7_FantasyGameCharacter::Rotate);
 
 	// Spell selection.
 	PlayerInputComponent->BindAction("Water", IE_Pressed, this, &AGruppe7_FantasyGameCharacter::SelectWater);
@@ -155,23 +157,23 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 
 	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
 
-	if (HitResult)
-	{
-		FVector CursorFV = Hit.ImpactNormal;
-		FRotator CursorR = CursorFV.Rotation();
-		CursorToWorld->SetWorldLocation(Hit.Location);
-		//CursorToWorld->SetWorldRotation(CursorR);
-		CursorToWorld->RelativeRotation = FRotator(90.f, 180.f, 90.f);
+	//if (HitResult)
+	//{
+	//	FVector CursorFV = Hit.ImpactNormal;
+	//	FRotator CursorR = CursorFV.Rotation();
+	//	CursorToWorld->SetWorldLocation(Hit.Location);
+	//	//CursorToWorld->SetWorldRotation(CursorR);
+	//	CursorToWorld->RelativeRotation = FRotator(90.f, 180.f, 90.f);
 
-		FVector CursorLocation = Hit.Location;
-		UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());
+	//	FVector CursorLocation = Hit.Location;
+	//	UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());
 
-		FVector TempLocation = FVector(CursorLocation.X, CursorLocation.Y, 30.f);
-		FVector NewDirection = TempLocation - GetActorLocation();
-		NewDirection.Z = 0.f;
-		NewDirection.Normalize();
-		SetActorRotation(NewDirection.Rotation());
-	}
+	//	FVector TempLocation = FVector(CursorLocation.X, CursorLocation.Y, 30.f);
+	//	FVector NewDirection = TempLocation - GetActorLocation();
+	//	NewDirection.Z = 0.f;
+	//	NewDirection.Normalize();
+	//	SetActorRotation(NewDirection.Rotation());
+	//}
 }
 
 void AGruppe7_FantasyGameCharacter::SpellSwapUp()
@@ -273,6 +275,15 @@ void AGruppe7_FantasyGameCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+void AGruppe7_FantasyGameCharacter::Rotate(float Value)
+{	
+	FRotator CurrentRot = GetActorRotation();
+
+	CurrentRot += FRotator(0.f, Value * 2, 0.f);
+
+	SetActorRotation(CurrentRot);
 }
 
 void AGruppe7_FantasyGameCharacter::PhysAttack()
