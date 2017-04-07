@@ -52,7 +52,7 @@ default:
 // FUNCTIONS FOR STATES START HERE
 void AEnemy_AI_Controller::IdleState()
 {
-	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("I am being idle"));
+	//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("I am being idle"));
 
 	float Distance = Cast<AEnemyBaseClass>(GetCharacter())->GetDistanceToPlayer();
 
