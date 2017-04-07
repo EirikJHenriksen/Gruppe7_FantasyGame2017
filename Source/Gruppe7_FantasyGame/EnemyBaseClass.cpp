@@ -38,7 +38,7 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 	// Updates DistanceToPlayer
 	UpdateDistance();
 
-	// Enemy physical attack.
+	// Enemy physical attack. - should move to controller ///////////
 	if (DistanceToPlayer < 100.f)
 	{
 		++BadTimer;
@@ -48,6 +48,7 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 			BadTimer = 0;
 		}
 	}
+		//ClearSightCheck();
 }
 
 // the enemies melee attack
@@ -76,9 +77,9 @@ FVector AEnemyBaseClass::GetMyStartLocation() {	return MyStartLocation; }
 // gets the distance to player
 void AEnemyBaseClass::UpdateDistance()
 {
-	PlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
+	CurrentPlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
 
-	DistanceVector = GetActorLocation() - PlayerLocation;
+	DistanceVector = GetActorLocation() - CurrentPlayerLocation;
 
 	DistanceToPlayer = DistanceVector.Size();
 }
@@ -177,7 +178,33 @@ void AEnemyBaseClass::DeathCheck()
 }
 
 // line trace to check if enemy sees player, or if line of sight is blocked
-void AEnemyBaseClass::ClearSightCheck()
+bool AEnemyBaseClass::ClearSightCheck()
 {
-	//UWorld::LineTraceSingleByChannel(GetActorLocation(), Cast<AGruppe7_FantasyGameCharacter>(GetActorLocation()), ECollisionChannel::ECC_Visibility, );
+	if (GetWorld()->GetFirstPlayerController()->GetCharacter())
+	{
+	FHitResult hitResult;
+	FVector MyLocation = GetActorLocation();
+	CurrentPlayerLocation = GetWorld()->GetFirstPlayerController()->GetCharacter()->GetActorLocation();
+	FCollisionQueryParams collisionParams = FCollisionQueryParams();
+	collisionParams.AddIgnoredActor(this);
+
+	GetWorld()->LineTraceSingleByChannel(hitResult, MyLocation, CurrentPlayerLocation, ECC_Visibility, collisionParams); ////////
+
+	if (hitResult.bBlockingHit)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("view blocked"));
+		return false;
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("sees player"));
+		return true;
+	}
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("No player"));
+		return false;
+	}
+
 }

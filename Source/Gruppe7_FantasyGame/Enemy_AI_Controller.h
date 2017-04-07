@@ -8,26 +8,36 @@
 /**
  * 
  */
+ // An enum class for which state the enemy is in
+UENUM(BlueprintType) //"BlueprintType" is essential to include
+enum class StateEnum : uint8
+{
+	IDLE,
+	APPROACH,
+	RETURN
+};
+
+
 UCLASS()
 class GRUPPE7_FANTASYGAME_API AEnemy_AI_Controller : public AAIController
 {
 	GENERATED_BODY()
 
-	//	UPROPERTY(transient)
-	//	class UBlackboardComponent *BlackboardComp;
-
-	//UPROPERTY(transient)
-	//	class UBehaviorTreeComponent *BehaviorComp;
+		UPROPERTY(EditAnywhere, Category = Enum)
+		StateEnum State;
 	
 public:
 	AEnemy_AI_Controller();
 
 	virtual void Possess(APawn *InPawn) override;
 
-	//uint8 EnemyKeyID;
 
 	virtual void Tick(float DeltaTime) override;
 
 	FVector MyHome;
+
+	void IdleState();
+	void ApproachState();
+	void ReturnState();
 
 };

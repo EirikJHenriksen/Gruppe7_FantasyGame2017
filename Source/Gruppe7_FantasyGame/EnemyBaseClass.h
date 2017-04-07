@@ -5,7 +5,7 @@
 #include "GameFramework/Character.h"
 #include "EnemyBaseClass.generated.h"
 
-// A enum class that hold the kinds of elements enemies can belong to 
+// An enum class that hold the kinds of elements enemies can belong to 
 UENUM(BlueprintType) //"BlueprintType" is essential to include
 enum class ElementsEnum : uint8
 {
@@ -53,7 +53,7 @@ public:
 		class UBehaviorTree *BotBehavior;
 
 	// Distance detection variables.
-	FVector PlayerLocation;
+	FVector CurrentPlayerLocation;
 	FVector DistanceVector;
 	float DistanceFloat;
 
@@ -61,7 +61,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		ElementsEnum Element;
 
-	void ClearSightCheck();
+	bool ClearSightCheck();
 
 protected:
 	// Called when the game starts or when spawned
@@ -99,4 +99,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		USoundBase* EnemyMeleeAttackSound;
+
+	
+
 };
