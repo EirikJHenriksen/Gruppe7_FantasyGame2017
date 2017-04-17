@@ -27,6 +27,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
 		int SpellSelect;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
+		int CurrentLevel;
+
 	FVector PlayerLocation;
 
 	float GetHealth();
@@ -62,4 +65,8 @@ public:
 	void UFantasyGameInstance::SelectThorns();
 
 	void UFantasyGameInstance::SelectHealing();
+
+	void SetCurrentLevel(int level);
+
+	int GetCurrentLevel();
 };

@@ -9,6 +9,8 @@ UFantasyGameInstance::UFantasyGameInstance(const FObjectInitializer& ObjectIniti
 {
 	Health = 1.f;
 	Mana = 1.f;
+
+	CurrentLevel = 1;
 }
 
 float UFantasyGameInstance::GetHealth()
@@ -114,4 +116,14 @@ void UFantasyGameInstance::SelectThorns()
 void UFantasyGameInstance::SelectHealing()
 {
 	SpellSelect = 3;
+}
+
+void UFantasyGameInstance::SetCurrentLevel(int level)
+{
+	CurrentLevel = level;
+}
+
+int UFantasyGameInstance::GetCurrentLevel()
+{
+	return CurrentLevel;
 }

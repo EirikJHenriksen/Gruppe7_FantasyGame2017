@@ -117,6 +117,8 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 	Mana = Cast<UFantasyGameInstance>(GetGameInstance())->GetMana();
 	SpellSelect = Cast<UFantasyGameInstance>(GetGameInstance())->GetCurrentSpell();
 
+	CurrentLevel = Cast<UFantasyGameInstance>(GetGameInstance())->GetCurrentLevel();
+
 	// TIMERS.
 	if (SpellIsContinuous)
 	{	
@@ -484,6 +486,28 @@ void AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver()
 	GetWorld()->GetTimerManager().ClearTimer(SpeedPowerUpTimerHandle);
 }
 
+void AGruppe7_FantasyGameCharacter::Respawner()
+{	
+	switch (CurrentLevel)
+	{
+	default:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("SOMETHING WENT WRONG WITH THE RESPAWNING!"));
+		break;
+	case 1:
+		GetWorld()->ServerTravel(FString("/Game/Maps/Level01_TheForest"));
+		break;
+	case 2:
+		GetWorld()->ServerTravel(FString("/Game/Maps/Level02_TheCastle"));
+		break;
+	case 3:
+		GetWorld()->ServerTravel(FString("/Game/Maps/Level03_BossRoom"));
+		break;
+	}
+
+	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(100.f);
+	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(100.f);
+}
+
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {	
 	////////////////////////////////////////////////////////////////////////////////
@@ -502,7 +526,7 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 			// DEBUG - Erstatt med en effekt?
 			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
 
-			Destroy();
+			Respawner();
 		}
 	}
 

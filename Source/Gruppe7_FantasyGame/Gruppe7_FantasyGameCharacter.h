@@ -71,6 +71,9 @@ public:
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
+	// Handles the player characters death.
+		void Respawner();
+
 	// VFX.
 	UPROPERTY(EditAnywhere, Category = "VFX")
 		UParticleSystem *HealthPickUpFX;
@@ -88,8 +91,15 @@ public:
 
 
 protected:
+	
 	///////////////////////////////////////////////////////////////////////////
-	// Spell selevt variables.
+	// Respawn related variables.
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Levels")
+		int CurrentLevel;
+
+	///////////////////////////////////////////////////////////////////////////
+	// Spell select variables.
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
 		int SpellSelect;
@@ -157,13 +167,6 @@ protected:
 	void PowerUp_Speed();
 
 	void PowerUp_SpeedOver();
-
-
-	/** Handler for when jump input begins. */
-	//void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/** Handler for when jump input stops. */
-	//void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 protected:
 	// APawn interface
