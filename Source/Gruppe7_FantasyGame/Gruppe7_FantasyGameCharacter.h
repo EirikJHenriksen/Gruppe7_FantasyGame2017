@@ -33,6 +33,21 @@ public:
 		class UDecalComponent* CursorToWorld;
 
 	///////////////////////////////////////////////////////////////////////////
+	// Materials for cursor.
+
+	UPROPERTY(EditAnywhere, Category = "Cursor Materials")
+		UMaterialInterface* Water;
+
+	UPROPERTY(EditAnywhere, Category = "Cursor Materials")
+		UMaterialInterface* Fire;
+
+	UPROPERTY(EditAnywhere, Category = "Cursor Materials")
+		UMaterialInterface* Thorns;
+
+	UPROPERTY(EditAnywhere, Category = "Cursor Materials")
+		UMaterialInterface* Healing;
+
+	///////////////////////////////////////////////////////////////////////////
 	// Attack object. - Physical hit box and magic effects.
 
 	// Selects magic projectile.
@@ -51,6 +66,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class APhysAttackBox> PhysAttackBlueprint;
 
+	// Selects knockback sphere.
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AKnockbackSphere> KnockbackBlueprint;
+
 	///////////////////////////////////////////////////////////////////////////
 	// Health and Mana variables.
 
@@ -60,13 +79,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD Variables")
 		float Health;
 
-
-	/////////////////////////////////////
-	// Movement/Location variables.
-
-	FVector PlayerVelocity;
-
-
 	// Overlap function.
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
@@ -74,20 +86,50 @@ public:
 	// Handles the player characters death.
 		void Respawner();
 
-	// VFX.
-	UPROPERTY(EditAnywhere, Category = "VFX")
-		UParticleSystem *HealthPickUpFX;
+	// Functions that deal with Sound FX
+		int RandomInt;
 
-	UPROPERTY(EditAnywhere, Category = "VFX")
-		UParticleSystem *ManaPickUpFX;
+		void PlayerDamageSound();
 
-	UPROPERTY(EditAnywhere, Category = "VFX")
-		UParticleSystem *HitFX;
+		void PlayerAttackSound();
 
 	// SFX.
-	//UPROPERTY(EditAnywhere)
-		//USoundBase* PickUpSound;
-		
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* PickUpSound;
+
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* AttackSound01;
+
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* AttackSound02;
+
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* YellSound01;
+
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* YellSound02;
+
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* DamageSound01;
+
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* DamageSound02;
+
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* PainSound01;
+
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* PainSound02;
+
+	// VFX.
+	UPROPERTY(EditAnywhere, Category = "VFX")
+		UParticleSystem* HealthPickUpFX;
+
+	UPROPERTY(EditAnywhere, Category = "VFX")
+		UParticleSystem* ManaPickUpFX;
+
+	UPROPERTY(EditAnywhere, Category = "VFX")
+		UParticleSystem* HitFX;
 
 
 protected:
@@ -122,7 +164,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timers")
 		float SpeedPowerUpDuration = 10.f;
 
-
 	/** Called for forward/backward input */
 	void MoveForward(float Value);
 
@@ -153,6 +194,8 @@ protected:
 	// Attack/Spell timers.
 	
 	float SpellContTimer = 0.f;
+
+	float SpellDelay = 30.f;
 
 	float AttackTimer = 0.f;
 

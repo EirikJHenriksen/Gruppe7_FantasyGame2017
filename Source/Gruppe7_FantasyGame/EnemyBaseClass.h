@@ -27,6 +27,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AEnemyAttackBox> EnemyAttackBlueprint;
 
+	/////////////////////////////////////
+	// VFX.
+
+	UPROPERTY(EditAnywhere, Category = "VFX")
+		UParticleSystem *HitFX;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -34,6 +40,7 @@ public:
 
 	// getters
 	float GetDistanceToPlayer();
+
 	FVector GetMyStartLocation();
 
 	// sets DistanceToPlayer
@@ -47,6 +54,10 @@ public:
 	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
 	void DeathCheck();
+
+	void EnemyIsHit(float force, float duration);
+
+	void SlowdownOver();
 
 	// Should safely remove this at some point...
 	UPROPERTY(EditAnywhere, Category = Behavior)
@@ -68,8 +79,11 @@ protected:
 	virtual void BeginPlay() override;
 
 	/////////////////
-	// Timer. currently based on frames not real time
-	int BadTimer;
+	// Timers for attack.
+	float AttackTimer = 30.f;
+
+	/* Handle for slowdown timer */
+	FTimerHandle SlowdownTimerHandle;
 
 private:
 	// enemies HP

@@ -32,6 +32,8 @@ public:
 
 	FVector PlayerLocation;
 
+	FVector PlayerVelocity;
+
 	float GetHealth();
 
 	float GetMana();
@@ -58,15 +60,19 @@ public:
 	
 	FVector GetPlayerLocation();
 
-	void UFantasyGameInstance::SelectWater();
+	void SelectWater();
 
-	void UFantasyGameInstance::SelectFire();
+	void SelectFire();
 
-	void UFantasyGameInstance::SelectThorns();
+	void SelectThorns();
 
-	void UFantasyGameInstance::SelectHealing();
+	void SelectHealing();
 
 	void SetCurrentLevel(int level);
 
 	int GetCurrentLevel();
+
+	//void SetPlayerVelocity(FVector Velocity);
+
+	//FVector GetPlayerVelocity();
 };

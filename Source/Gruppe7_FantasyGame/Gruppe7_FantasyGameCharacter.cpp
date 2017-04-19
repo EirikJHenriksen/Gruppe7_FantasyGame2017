@@ -5,6 +5,7 @@
 #include "ConeOfFire.h"
 #include "CircleOfThorns.h"
 #include "PhysAttackBox.h"
+#include "KnockbackSphere.h"
 #include "ManaPotion.h"
 #include "HealthPotion.h"
 #include "PowerUp_Speed.h"
@@ -56,12 +57,12 @@ AGruppe7_FantasyGameCharacter::AGruppe7_FantasyGameCharacter()
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/Textures/PawDecal_MAT.PawDecal_MAT'"));
-	
-	if (DecalMaterialAsset.Succeeded())
-	{
-		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
-	}
+	//static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/Materials/Pointers/PawDecal_MAT.PawDecal_MAT'"));
+	//
+	//if (DecalMaterialAsset.Succeeded())
+	//{
+	//	CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
+	//}
 	
 	CursorToWorld->DecalSize = FVector(32.0f, 64.0f, 64.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
@@ -106,11 +107,9 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	// Gets the main characters velocity. Use this to boost projectile speed.
-	PlayerVelocity = (this->GetVelocity());
-
-	// Oppdaterer GameInstance med spillerens plassering.
+	// Updates GameInstance with the players location and velocity.
 	Cast<UFantasyGameInstance>(GetGameInstance())->SetPlayerLocation(GetActorLocation());
+	//Cast<UFantasyGameInstance>(GetGameInstance())->SetPlayerVelocity(this->GetVelocity());
 
 	// Synchronizes Player variables with game instance.
 	Health = Cast<UFantasyGameInstance>(GetGameInstance())->GetHealth();
@@ -119,11 +118,34 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 
 	CurrentLevel = Cast<UFantasyGameInstance>(GetGameInstance())->GetCurrentLevel();
 
+	/////////////////////////
+	// Swaps cursor material.
+	switch (SpellSelect)
+	{
+	default:
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("ERROR!!! MATERIAL SWAP FAILED"));
+		break;
+	case 0:
+		CursorToWorld->SetDecalMaterial(Water);
+		break;
+	case 1:
+		CursorToWorld->SetDecalMaterial(Fire);
+		break;
+	case 2:
+		CursorToWorld->SetDecalMaterial(Thorns);
+		break;
+	case 3:
+		CursorToWorld->SetDecalMaterial(Healing);
+		break;
+	}
+
+
+
 	// TIMERS.
 	if (SpellIsContinuous)
 	{	
 		SpellContTimer += 1.f;
-		if (SpellContTimer > 30.f)
+		if (SpellContTimer > SpellDelay)
 		{
 			AGruppe7_FantasyGameCharacter::MagiAttack();
 			SpellContTimer = 0.f;
@@ -166,7 +188,7 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		CursorToWorld->RelativeRotation = FRotator(90.f, 180.f, 90.f);
 
 		FVector CursorLocation = Hit.Location;
-		UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());
 
 		FVector TempLocation = FVector(CursorLocation.X, CursorLocation.Y, 30.f);
 		FVector NewDirection = TempLocation - GetActorLocation();
@@ -296,8 +318,9 @@ void AGruppe7_FantasyGameCharacter::PhysAttack()
 
 			GetWorld()->SpawnActor<APhysAttackBox>(PhysAttackBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
-			//Spiller lyd.
-			//UGameplayStatics::PlaySound2D(GetWorld(), AttackSound, 1.f, 1.f, 0.f);
+			GetWorld()->SpawnActor<AKnockbackSphere>(KnockbackBlueprint, GetActorLocation(), GetActorRotation());
+
+			PlayerAttackSound();
 		}
 	}
 }
@@ -335,6 +358,7 @@ void AGruppe7_FantasyGameCharacter::MagiProjectile()
 void AGruppe7_FantasyGameCharacter::MagiFireCone()
 {	
 	SpellIsContinuous = true;
+	SpellDelay = 30.f;
 
 	//Set the required mana for casting this spell.
 	float ManaRequirement{ 0.075f };
@@ -385,6 +409,7 @@ void AGruppe7_FantasyGameCharacter::MagiThornCircle()
 void AGruppe7_FantasyGameCharacter::MagiHealing()
 {	
 	SpellIsContinuous = true;
+	SpellDelay = 1.f;
 
 	// DEBUG.
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("ATTEMPT AT HEALING!!!"));
@@ -508,6 +533,84 @@ void AGruppe7_FantasyGameCharacter::Respawner()
 	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(100.f);
 }
 
+void AGruppe7_FantasyGameCharacter::PlayerDamageSound()
+{
+	//Random hit sound.
+	int random = FMath::RandRange(0,1);
+
+	switch (random)
+	{
+	default:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("SOMETHING WENT WRONG WITH SOUND! FUNCTION: PlayerDamageSound()"));
+		break;
+	case 0:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Crash!"));
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), DamageSound01, GetActorLocation());
+		break;
+	case 1:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Smack!"));
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), DamageSound02, GetActorLocation());
+		break;
+	}
+
+	//Random scream sound.
+	RandomInt = FMath::RandRange(0, 1);
+
+	switch (RandomInt)
+	{
+	default:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("SOMETHING WENT WRONG WITH SOUND! FUNCTION: PlayerDamageSound()"));
+		break;
+	case 0:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Orange, TEXT("Au!"));
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), PainSound01, GetActorLocation());
+		break;
+	case 1:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Orange, TEXT("Ouch!"));
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), PainSound02, GetActorLocation());
+		break;
+	}
+}
+
+void AGruppe7_FantasyGameCharacter::PlayerAttackSound()
+{
+	//Random attack sound.
+	RandomInt = FMath::RandRange(0, 1);
+
+	switch (RandomInt)
+	{
+	default:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("SOMETHING WENT WRONG WITH SOUND! FUNCTION: PlayerAttackSound()"));
+		break;
+	case 0:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("SWOOSH!"));
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), AttackSound01, GetActorLocation());
+		break;
+	case 1:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("SWISH!"));
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), AttackSound02, GetActorLocation());
+		break;
+	}
+
+	//Random yell sound.
+	int random = FMath::RandRange(0, 1);
+
+	switch (random)
+	{
+	default:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("SOMETHING WENT WRONG WITH SOUND! FUNCTION: PlayerAttackSound()"));
+		break;
+	case 0:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Orange, TEXT("Huya!"));
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), YellSound01, GetActorLocation());
+		break;
+	case 1:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Orange, TEXT("Ha!"));
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), YellSound02, GetActorLocation());
+		break;
+	}
+}
+
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {	
 	////////////////////////////////////////////////////////////////////////////////
@@ -520,6 +623,8 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 		Cast<UFantasyGameInstance>(GetGameInstance())->DrainHealth(0.1f);
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
+
+		PlayerDamageSound();
 
 		if (Health <= 0.f)
 		{	

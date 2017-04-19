@@ -2,7 +2,6 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "Gruppe7_FantasyGameCharacter.h"
-#include "BreakableBox.h"
 #include "MagicProjectile.h"
 
 
@@ -26,7 +25,7 @@ AMagicProjectile::AMagicProjectile()
 	// Use this component to drive this projectile's movement.
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-	ProjectileMovementComponent->InitialSpeed = 1000.0f;
+	ProjectileMovementComponent->InitialSpeed = 1000.f;
 	ProjectileMovementComponent->MaxSpeed = 2000.0f; //Sett til 1000.f hvis spiller akselerasjon ikke fungerer.
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->bShouldBounce = false;
@@ -45,10 +44,6 @@ void AMagicProjectile::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	//FVector NewLocation = GetActorLocation();
-	//NewLocation += GetActorForwardVector() * Speed * DeltaTime;
-	//SetActorLocation(NewLocation);
-
 	TimeLived += DeltaTime;
 	if (TimeLived > TimeBeforeDestroy)
 	{
@@ -66,14 +61,6 @@ void AMagicProjectile::FireInDirection(const FVector& ShootDirection)
 {	
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }
-
-//void AMagicProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-//{	
-//	if (OtherActor->IsRootComponentStatic())
-//	{
-//		this->Destroy();
-//	}
-//}
 
 void AMagicProjectile::Destroy()
 {

@@ -6,6 +6,7 @@
 #include "ConeOfFire.h"
 #include "CircleOfThorns.h"
 #include "PhysAttackBox.h"
+#include "KnockbackSphere.h"
 #include "Gruppe7_FantasyGameCharacter.h"
 #include "FantasyGameInstance.h"
 #include "EnemyAttackBox.h"
@@ -20,6 +21,11 @@ AEnemyBaseClass::AEnemyBaseClass()
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	GetCapsuleComponent()->bGenerateOverlapEvents = true;
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyBaseClass::OnOverlap);
+
+	// Sets control parameters
+	GetCharacterMovement()->AirControl = 0.f;
+	GetCharacterMovement()->AirControlBoostMultiplier = 0.f;
+	GetCharacterMovement()->AirControlBoostVelocityThreshold = 0.f;
 }
 
 // Called when the game starts or when spawned
@@ -35,17 +41,20 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Keeps track of the players location. IMPORTANT THAT IT STAYS IN TICK FUNCTION.
+	CurrentPlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
+
 	// Updates DistanceToPlayer
 	UpdateDistance();
 
 	// Enemy physical attack. - should move to controller ///////////
 	if (DistanceToPlayer < 100.f)
 	{
-		++BadTimer;
-		if (BadTimer > 60)
+		AttackTimer += 1.f;
+		if (AttackTimer > 30.f)
 		{
 			AEnemyBaseClass::MeleeAttack();
-			BadTimer = 0;
+			AttackTimer = 0.f;
 		}
 	}
 		//ClearSightCheck();
@@ -77,8 +86,6 @@ FVector AEnemyBaseClass::GetMyStartLocation() {	return MyStartLocation; }
 // gets the distance to player
 void AEnemyBaseClass::UpdateDistance()
 {
-	CurrentPlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
-
 	DistanceVector = GetActorLocation() - CurrentPlayerLocation;
 
 	DistanceToPlayer = DistanceVector.Size();
@@ -92,6 +99,17 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 	{
 		OtherActor->Destroy();
 		HealthPoints -= DamageMelee;
+		
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
+
+		// Pushes the enemy back. They get slowed down for some time. (FORCE, DURATION).
+		EnemyIsHit(1000.f, 1.5f);
+	}
+
+	if (OtherActor->IsA(AKnockbackSphere::StaticClass()))
+	{
+		// Pushes the enemy back. They get slowed down for some time. (FORCE, DURATION).
+		EnemyIsHit(500.f, 1.f);
 	}
 
 	// Magic Projectile - WATER
@@ -177,6 +195,28 @@ void AEnemyBaseClass::DeathCheck()
 	}
 }
 
+void AEnemyBaseClass::EnemyIsHit(float force, float duration)
+{
+	// Pushes back the enemy.
+	//FVector PlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
+
+	FVector KnockbackVector = GetActorLocation() - CurrentPlayerLocation;
+	KnockbackVector.Normalize();
+
+	LaunchCharacter((KnockbackVector * force) + FVector(0.f, 0.f, 20.f), false, false);
+
+	GetCharacterMovement()->MaxWalkSpeed = 100.f;
+
+	GetWorldTimerManager().SetTimer(SlowdownTimerHandle, this, &AEnemyBaseClass::SlowdownOver, duration, false);
+}
+
+void AEnemyBaseClass::SlowdownOver()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+
+	GetWorld()->GetTimerManager().ClearTimer(SlowdownTimerHandle);
+}
+
 // line trace to check if enemy sees player, or if line of sight is blocked
 bool AEnemyBaseClass::ClearSightCheck()
 {
@@ -184,7 +224,6 @@ bool AEnemyBaseClass::ClearSightCheck()
 	{
 	FHitResult hitResult;
 	FVector MyLocation = GetActorLocation();
-	CurrentPlayerLocation = GetWorld()->GetFirstPlayerController()->GetCharacter()->GetActorLocation();
 	FCollisionQueryParams collisionParams = FCollisionQueryParams();
 	collisionParams.AddIgnoredActor(this);
 
