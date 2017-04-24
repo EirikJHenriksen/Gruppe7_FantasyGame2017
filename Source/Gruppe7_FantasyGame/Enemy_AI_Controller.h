@@ -5,16 +5,15 @@
 #include "AIController.h"
 #include "Enemy_AI_Controller.generated.h"
 
-/**
- * 
- */
+
  // An enum class for which state the enemy is in
 UENUM(BlueprintType) //"BlueprintType" is essential to include
 enum class StateEnum : uint8
 {
 	IDLE,
-	APPROACH,
-	RETURN
+	FOLLOW,
+	RETURN,
+	ATTACK
 };
 
 
@@ -23,8 +22,8 @@ class GRUPPE7_FANTASYGAME_API AEnemy_AI_Controller : public AAIController
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnywhere, Category = Enum)
-		StateEnum State;
+	UPROPERTY(EditAnywhere, Category = Enum)
+	StateEnum State;
 	
 public:
 	AEnemy_AI_Controller();
@@ -34,10 +33,13 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	FVector MyHome;
+	//FVector MyHome;
 
 	void IdleState();
 	void ApproachState();
 	void ReturnState();
+	//void AttackState();
+
+private:
 
 };

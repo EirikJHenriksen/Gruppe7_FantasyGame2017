@@ -27,6 +27,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AEnemyAttackBox> EnemyAttackBlueprint;
 
+	// Mana?
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AManaPotion> SpawningMana; // holds the blueprint of the mana potion
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -61,7 +65,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		ElementsEnum Element;
 
-	bool ClearSightCheck();
+	bool CanSeePlayer();
 
 protected:
 	// Called when the game starts or when spawned
@@ -100,6 +104,10 @@ private:
 	UPROPERTY(EditAnywhere)
 		USoundBase* EnemyMeleeAttackSound;
 
-	
-
+	//typedef void (AEnemyBaseClass::*FunctionPointer)(void);
+	//trying to make a function pointer for states, basically
+	//FunctionPointer (*AIFunctionPointer)() = &StateIdle;
+/*
+	typedef void(AEnemyBaseClass::*AIFunctionPointerType)(void);
+	AIFunctionPointerType AIFunction = &AEnemyBaseClass::StateIdle;*/
 };
