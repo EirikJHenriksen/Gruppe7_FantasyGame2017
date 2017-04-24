@@ -127,3 +127,13 @@ int UFantasyGameInstance::GetCurrentLevel()
 {
 	return CurrentLevel;
 }
+
+//void UFantasyGameInstance::SetPlayerVelocity(FVector Velocity)
+//{
+//	PlayerVelocity = Velocity;
+//}
+//
+//FVector UFantasyGameInstance::GetPlayerVelocity()
+//{
+//	return PlayerVelocity;
+//}
