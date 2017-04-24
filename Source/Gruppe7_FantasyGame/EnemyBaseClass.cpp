@@ -23,16 +23,15 @@ AEnemyBaseClass::AEnemyBaseClass()
 	GetCapsuleComponent()->bGenerateOverlapEvents = true;
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyBaseClass::OnOverlap);
 
-<<<<<<< HEAD
 	// get Mana Potion Blueprint
-	static ConstructorHelpers::FObjectFinder<UClass> SpawningManaFinder(TEXT("Blueprint'/Game/Blueprints/ManaPotion_BP.ManaPotion_BP'_C'"));
+	static ConstructorHelpers::FObjectFinder<UClass> SpawningManaFinder(TEXT("Blueprint'/Game/Blueprints/ManaPotion_BP.ManaPotion_BP_C'"));
 	SpawningMana = SpawningManaFinder.Object;
-=======
+
 	// Sets control parameters
 	GetCharacterMovement()->AirControl = 0.f;
 	GetCharacterMovement()->AirControlBoostMultiplier = 0.f;
 	GetCharacterMovement()->AirControlBoostVelocityThreshold = 0.f;
->>>>>>> 62ecb34d4e1435956d6575dba812c71153fb8b72
+
 }
 
 // Called when the game starts or when spawned
@@ -49,41 +48,8 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-<<<<<<< HEAD
-
-	//////////////I moved all this to CanSeePlayer
-	//// Updates DistanceToPlayer
-	//UpdateDistance();
-
-	//// Enemy physical attack. - should move to controller ///////////
-	//if (DistanceToPlayer < 100.f)
-	//{
-	//	++BadTimer;
-	//	if (BadTimer > 60)
-	//	{
-	//		AEnemyBaseClass::MeleeAttack();
-	//		BadTimer = 0;
-	//	}
-	//}
-=======
 	// Keeps track of the players location. IMPORTANT THAT IT STAYS IN TICK FUNCTION.
 	CurrentPlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
-
-	// Updates DistanceToPlayer
-	UpdateDistance();
-
-	// Enemy physical attack. - should move to controller ///////////
-	if (DistanceToPlayer < 100.f)
-	{
-		AttackTimer += 1.f;
-		if (AttackTimer > 30.f)
-		{
-			AEnemyBaseClass::MeleeAttack();
-			AttackTimer = 0.f;
-		}
-	}
->>>>>>> 62ecb34d4e1435956d6575dba812c71153fb8b72
-		//ClearSightCheck();
 }
 
 // getters
@@ -112,10 +78,8 @@ void AEnemyBaseClass::MeleeAttack()
 // gets the distance to player
 void AEnemyBaseClass::UpdateDistance()
 {
-<<<<<<< HEAD
 	CurrentPlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
-=======
->>>>>>> 62ecb34d4e1435956d6575dba812c71153fb8b72
+
 	DistanceVector = GetActorLocation() - CurrentPlayerLocation;
 	DistanceToPlayer = DistanceVector.Size();
 }
@@ -218,10 +182,7 @@ void AEnemyBaseClass::DeathCheck()
 	{
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EnemyDeathSound, GetActorLocation());
 
-
-		// spawn a potion - maybe?
-		GetWorld()->SpawnActor<AManaPotion>(SpawningMana, GetActorLocation(), GetActorRotation());
-
+		// could spawn a potion here
 
 		Destroy();
 	}
@@ -258,7 +219,7 @@ bool AEnemyBaseClass::CanSeePlayer()
 {
 	if (GetWorld()->GetFirstPlayerController()->GetCharacter())
 	{
-<<<<<<< HEAD
+
 		// Updates DistanceToPlayer
 		UpdateDistance();
 
@@ -287,11 +248,11 @@ bool AEnemyBaseClass::CanSeePlayer()
 				// Enemy physical attack. - should move to controller ///////////
 				if (DistanceToPlayer < 100.f)
 				{
-					++BadTimer;
-					if (BadTimer > 20)
+					++AttackTimer;
+					if (AttackTimer > 20.f)
 					{
 						AEnemyBaseClass::MeleeAttack();
-						BadTimer = 0;
+						AttackTimer = 0.f;
 					}
 				}
 				return true;
@@ -304,12 +265,11 @@ bool AEnemyBaseClass::CanSeePlayer()
 			// player not close enough, so no point in running the other tests
 			return false;
 		}
-=======
 	FHitResult hitResult;
 	FVector MyLocation = GetActorLocation();
 	FCollisionQueryParams collisionParams = FCollisionQueryParams();
 	collisionParams.AddIgnoredActor(this);
->>>>>>> 62ecb34d4e1435956d6575dba812c71153fb8b72
+
 
 
 	}

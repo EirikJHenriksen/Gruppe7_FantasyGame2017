@@ -27,17 +27,17 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AEnemyAttackBox> EnemyAttackBlueprint;
 
-<<<<<<< HEAD
+
 	// Mana?
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AManaPotion> SpawningMana; // holds the blueprint of the mana potion
-=======
+
 	/////////////////////////////////////
 	// VFX.
 
 	UPROPERTY(EditAnywhere, Category = "VFX")
 		UParticleSystem *HitFX;
->>>>>>> 62ecb34d4e1435956d6575dba812c71153fb8b72
+
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
