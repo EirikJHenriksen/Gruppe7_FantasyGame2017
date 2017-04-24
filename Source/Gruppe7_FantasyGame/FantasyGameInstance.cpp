@@ -11,6 +11,8 @@ UFantasyGameInstance::UFantasyGameInstance(const FObjectInitializer& ObjectIniti
 	Mana = 1.f;
 
 	CurrentLevel = 1;
+
+	BossFightActive = false;
 }
 
 float UFantasyGameInstance::GetHealth()

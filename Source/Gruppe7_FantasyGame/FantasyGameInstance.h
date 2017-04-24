@@ -18,6 +18,8 @@ public:
 
 	UFantasyGameInstance(const FObjectInitializer& ObjectInitializer);
 
+	//////////////////////////////////////////////////////////////////
+	// Player variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
 		float Health;
 
@@ -29,6 +31,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
 		int CurrentLevel;
+
+	////////////////////////////////////////////////////////////////////
+	// Game variables
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameVariables)
+		bool BossFightActive;
+
 
 	FVector PlayerLocation;
 

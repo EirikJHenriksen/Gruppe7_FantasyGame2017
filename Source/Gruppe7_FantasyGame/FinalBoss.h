@@ -26,6 +26,14 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/////////////////////////////////////////
+	// LOCATION VARIABLES
+	void UpdateDirection();
+
+	FVector CurrentPlayerLocation;
+
+	FVector LookVector;
+
+	/////////////////////////////////////////
 	// TELEPORTATION VARIABLES.
 	void Teleport();
 
