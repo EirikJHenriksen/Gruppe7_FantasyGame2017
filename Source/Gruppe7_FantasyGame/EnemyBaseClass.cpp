@@ -195,7 +195,7 @@ void AEnemyBaseClass::DeathCheck()
 void AEnemyBaseClass::EnemyIsHit(float force, float duration)
 {
 	// Pushes back the enemy.
-	//FVector PlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
+	// FVector PlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
 
 	FVector KnockbackVector = GetActorLocation() - CurrentPlayerLocation;
 	KnockbackVector.Normalize();

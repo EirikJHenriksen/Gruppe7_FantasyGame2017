@@ -10,6 +10,9 @@ ABossSpellFire::ABossSpellFire()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Collision object and RootObject
+	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
+	RootComponent = RootSphere;
 }
 
 // Called when the game starts or when spawned

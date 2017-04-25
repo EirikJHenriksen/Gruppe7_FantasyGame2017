@@ -26,12 +26,23 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/////////////////////////////////////////
+	// SPAWNING.
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class ABossSpellFire> SpellFireBlueprint;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AEnemyBaseClass> EnemyBlueprint;
+
+
+	/////////////////////////////////////////
 	// LOCATION VARIABLES
 	void UpdateDirection();
 
 	FVector CurrentPlayerLocation;
 
 	FVector LookVector;
+
+	int Element = 0;
 
 	/////////////////////////////////////////
 	// TELEPORTATION VARIABLES.
@@ -76,6 +87,25 @@ public:
 		float NatureY = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teleport NATURE")
 		float NatureZ = 0;
+
+	//////////////////////////////////////
+	// Action functions.
+	void Attack();
+
+	void SummonEnemy();
+
+	bool isAttacking;
+
+	FTimerHandle AttackTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack timers")
+		float AttackRandomMin = 2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack timers")
+		float AttackRandomMax = 10;
+
+	float RandomAttackTime = 0;
+
 
 	// Overlap function
 	UFUNCTION()

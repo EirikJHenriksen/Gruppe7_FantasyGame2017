@@ -6,6 +6,7 @@
 #include "ConeOfFire.h"
 #include "CircleOfThorns.h"
 #include "PhysAttackBox.h"
+#include "BossSpellFire.h"
 #include "Gruppe7_FantasyGameCharacter.h"
 #include "FantasyGameInstance.h"
 
@@ -30,6 +31,8 @@ void AFinalBoss::BeginPlay()
 	fightInProgress = true; // Synkroniser med BossFightActive variablen fra GameInstance.
 
 	canTeleport = true;
+
+	isAttacking = false;
 }
 
 // Called every frame
@@ -46,30 +49,32 @@ void AFinalBoss::Tick(float DeltaTime)
 	// Turns boss towards player.
 	SetActorRotation(LookVector.Rotation() + FRotator(0.f, -180.f, 0.f));
 	
+	if (fightInProgress)
+	{
+		if (canTeleport && !isAttacking)
+		{
+			canTeleport = false;
 
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("TIMER - ACTIVE"));
 
-	if (fightInProgress && canTeleport)
-	{	
-		canTeleport = false;
+			RandomTeleportTime = FMath::RandRange(RandomMin, RandomMax);
 
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("TIMER - ACTIVE"));
+			GetWorldTimerManager().SetTimer(TeleportTimerHandle, this, &AFinalBoss::Teleport, RandomTeleportTime, false);
 
-		RandomTeleportTime = FMath::RandRange(RandomMin, RandomMax);
+			//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORTER - FUNCTION OVER"));
+		}
 
-		GetWorldTimerManager().SetTimer(TeleportTimerHandle, this, &AFinalBoss::Teleport, RandomTeleportTime, false);
+		if (!canTeleport && !isAttacking)
+		{
+			isAttacking = true;
 
-		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORTER - FUNCTION OVER"));
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("ATTACK - ACTIVE"));
+
+			RandomAttackTime = FMath::RandRange(AttackRandomMin, AttackRandomMax);
+
+			GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AFinalBoss::Attack, RandomAttackTime, false);
+		}
 	}
-
-	//if (DistanceToPlayer < 100.f)
-	//{
-	//	AttackTimer += 1.f;
-	//	if (AttackTimer > 30.f)
-	//	{
-	//		Attack();
-	//		AttackTimer = 0.f;
-	//	}
-	//}
 }
 
 // gets the distance to player
@@ -83,7 +88,6 @@ void AFinalBoss::UpdateDirection()
 void AFinalBoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void AFinalBoss::Teleport()
@@ -102,18 +106,21 @@ void AFinalBoss::Teleport()
 		break;
 	case 0:
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - FIRE"));
+		Element = 0;
 		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), SFX01, GetActorLocation());
 		//VFX.
 		SetActorLocation(FVector(FireX, FireY, FireZ), false);
 		break;
 	case 1:
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - WATER"));
+		Element = 1;
 		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), SFX02, GetActorLocation());
 		//VFX.
 		SetActorLocation(FVector(WaterX, WaterY, WaterZ), false);
 		break;
 	case 2:
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - NATURE"));
+		Element = 2;
 		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), SFX03, GetActorLocation());
 		//VFX.
 		SetActorLocation(FVector(NatureX, NatureY, NatureZ), false);
@@ -123,6 +130,50 @@ void AFinalBoss::Teleport()
 	GetWorld()->GetTimerManager().ClearTimer(TeleportTimerHandle);
 
 	canTeleport = true;
+}
+
+void AFinalBoss::Attack()
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FVector Location = GetActorLocation();
+		FVector Offset = FVector(0.0f, 0.0f, 0.0f);
+
+		FRotator ProjectileRotation = GetActorRotation();
+
+		Location += Offset;
+
+		switch (Element)
+		{
+		default:
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("ERROR - Function: Attack()"));
+			break;
+		case 0:
+			GetWorld()->SpawnActor<ABossSpellFire>(SpellFireBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireAttackSound, GetActorLocation());
+			break;
+		case 1:
+			GetWorld()->SpawnActor<ABossSpellFire>(SpellFireBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			//GetWorld()->SpawnActor<ABossSpellWater>(SpellWaterBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), WaterAttackSound, GetActorLocation());
+			break;
+		case 2:
+			GetWorld()->SpawnActor<ABossSpellFire>(SpellFireBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			//GetWorld()->SpawnActor<ABossSpellNature>(SpellNatureBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), NatureAttackSound, GetActorLocation());
+			break;
+		}
+	}
+
+	GetWorld()->GetTimerManager().ClearTimer(AttackTimerHandle);
+
+	isAttacking = false;
+}
+
+void AFinalBoss::SummonEnemy()
+{
+	// Summons random enemy.
 }
 
 void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)

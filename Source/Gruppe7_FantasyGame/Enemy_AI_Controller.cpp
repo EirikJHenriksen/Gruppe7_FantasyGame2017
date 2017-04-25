@@ -103,17 +103,6 @@ void AEnemy_AI_Controller::ReturnState()
 
 }
 
-//void AEnemy_AI_Controller::StateIdle()
-//{
-//
-//	if (SeesPlayer == true)
-//	{
-//		GEngine->AddOnScreenDebugMessage(1, 10.f, FColor::Purple, TEXT("true"));
-//	}
-//	else {
-//		GEngine->AddOnScreenDebugMessage(1, 10.f, FColor::Purple, TEXT("false"));
-//	}
-//}
 
 /*
  Get distance
