@@ -30,7 +30,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 10.f;
+		float TimeBeforeDestroy = 4.f;
 
 	float TimeLived{ 0 };
 

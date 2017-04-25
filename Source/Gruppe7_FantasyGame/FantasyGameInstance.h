@@ -83,6 +83,8 @@ public:
 
 	int GetCurrentLevel();
 
+	bool GetBossFightActive();
+
 	//void SetPlayerVelocity(FVector Velocity);
 
 	//FVector GetPlayerVelocity();

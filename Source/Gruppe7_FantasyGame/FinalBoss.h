@@ -26,6 +26,12 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/////////////////////////////////////////
+	// Stats.
+
+	UPROPERTY(EditAnywhere, Category = "Stats")
+		float Health;
+
+	/////////////////////////////////////////
 	// SPAWNING.
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class ABossSpellFire> SpellFireBlueprint;
@@ -51,6 +57,8 @@ public:
 	bool fightInProgress;
 
 	bool canTeleport;
+
+	bool firstTeleport;
 
 	FTimerHandle TeleportTimerHandle;
 
@@ -102,7 +110,7 @@ public:
 		float AttackRandomMin = 2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack timers")
-		float AttackRandomMax = 10;
+		float AttackRandomMax = 8;
 
 	float RandomAttackTime = 0;
 

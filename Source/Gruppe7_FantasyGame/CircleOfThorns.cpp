@@ -14,7 +14,7 @@ ACircleOfThorns::ACircleOfThorns()
 	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
 	RootComponent = RootSphere;
 	RootSphere->bGenerateOverlapEvents = true;
-	RootSphere->SetWorldScale3D(FVector(10.f, 10.f, 10.f));
+	RootSphere->SetWorldScale3D(FVector(0.5f, 0.5f, 0.5f));
 }
 
 // Called when the game starts or when spawned
@@ -33,7 +33,7 @@ void ACircleOfThorns::Tick(float DeltaTime)
 	SetActorLocation(NewLocation);
 	if (!Stopped)
 	{
-		CurrentVelocity.Z = 100.0f;
+		CurrentVelocity.Z = 500.0f;
 	}
 	if (NewLocation.Z > 80.0f)
 	{

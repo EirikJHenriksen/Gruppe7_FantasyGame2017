@@ -17,6 +17,16 @@ public:
 	// Velocity
 	FVector CurrentVelocity;
 
+	/////////////////////////////////////////
+	// LOCATION VARIABLES
+	void UpdateTarget();
+
+	FVector CurrentPlayerLocation;
+
+	FVector TargetVector;
+
+	FVector VelocityVector;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -25,8 +35,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// What happens when destroyed.
+	void Destroy();
+
+	// Sets up collision.
 	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootSphere;
-	
-	
+		USphereComponent* CollisionComponent;
+
+	// Projectile movement component.
+	UPROPERTY(VisibleAnywhere, Category = Movement)
+		UProjectileMovementComponent* ProjectileMovementComponent;
+
+	//UFUNCTION()
+	//void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
 };
