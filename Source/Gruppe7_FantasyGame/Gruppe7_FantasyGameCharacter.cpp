@@ -9,6 +9,7 @@
 #include "ManaPotion.h"
 #include "HealthPotion.h"
 #include "PowerUp_Speed.h"
+#include "WizardCloud.h"
 #include "EnemyAttackBox.h"
 #include "FantasyGameInstance.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
@@ -637,6 +638,13 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 
 	////////////////////////////////////////////////////////////////////////////////
 	// POTIONS AND RESTORATIVE ITEMS.
+
+	if (OtherActor->IsA(AWizardCloud::StaticClass()) && Mana < 1.f)
+	{
+		OtherActor->Destroy();
+
+		AGruppe7_FantasyGameCharacter::ManaPotion(); // Fiks på mana og health funksjon så det tar i mot en float som definerer restoration amount!
+	}
 
 	if (OtherActor->IsA(AManaPotion::StaticClass()) && Mana < 1.f)
 	{

@@ -27,7 +27,7 @@ void AFinalBoss::BeginPlay()
 {
 	Super::BeginPlay();
 
-	fightInProgress = true; // SKAL VÆRE FALSE!
+	fightInProgress = true; // Synkroniser med BossFightActive variablen fra GameInstance.
 
 	canTeleport = true;
 }
@@ -36,6 +36,17 @@ void AFinalBoss::BeginPlay()
 void AFinalBoss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Keeps track of the players location. IMPORTANT THAT IT STAYS IN TICK FUNCTION.
+	CurrentPlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
+
+	// Updates DistanceToPlayer
+	UpdateDirection();
+
+	// Turns boss towards player.
+	SetActorRotation(LookVector.Rotation() + FRotator(0.f, -180.f, 0.f));
+	
+
 
 	if (fightInProgress && canTeleport)
 	{	
@@ -49,6 +60,23 @@ void AFinalBoss::Tick(float DeltaTime)
 
 		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORTER - FUNCTION OVER"));
 	}
+
+	//if (DistanceToPlayer < 100.f)
+	//{
+	//	AttackTimer += 1.f;
+	//	if (AttackTimer > 30.f)
+	//	{
+	//		Attack();
+	//		AttackTimer = 0.f;
+	//	}
+	//}
+}
+
+// gets the distance to player
+void AFinalBoss::UpdateDirection()
+{
+	LookVector = GetActorLocation() - CurrentPlayerLocation;
+	//DistanceToPlayer = DistanceVector.Size();
 }
 
 // Called to bind functionality to input
