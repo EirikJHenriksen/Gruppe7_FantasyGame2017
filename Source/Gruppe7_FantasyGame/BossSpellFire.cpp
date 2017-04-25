@@ -13,6 +13,7 @@ ABossSpellFire::ABossSpellFire()
 	//Collision object and RootObject
 	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
 	RootComponent = RootSphere;
+	RootSphere->SetWorldScale3D(FVector(2.f, 2.f, 2.f));
 }
 
 // Called when the game starts or when spawned
