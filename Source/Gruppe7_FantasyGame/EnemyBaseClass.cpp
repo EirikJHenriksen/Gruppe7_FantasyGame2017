@@ -125,7 +125,7 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 			HealthPoints -= DamageLeastEffective;
 			break;
 		default:
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("error - EnemyBaseClass - attacked"));
+			//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("error - EnemyBaseClass - attacked"));
 		}
 	}
 
@@ -226,7 +226,7 @@ bool AEnemyBaseClass::CanSeePlayer()
 		if (DistanceToPlayer < 900.f)
 		{
 
-			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Player within distance"));
+			//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Player within distance"));
 		
 			FHitResult hitResult;
 			FVector MyLocation = GetActorLocation();
@@ -238,12 +238,12 @@ bool AEnemyBaseClass::CanSeePlayer()
 
 			if (hitResult.bBlockingHit)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("view blocked"));
+				//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("view blocked"));
 				return false;
 			}
 			else
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("sees player"));
+				//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("sees player"));
 
 				// Enemy physical attack. - should move to controller ///////////
 				if (DistanceToPlayer < 100.f)

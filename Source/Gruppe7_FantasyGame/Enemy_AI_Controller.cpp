@@ -52,7 +52,7 @@ default:
 // IDLE
 void AEnemy_AI_Controller::IdleState()
 {
-	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("I am being idle"));
+	//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("I am being idle"));
 
 	if (Cast<AEnemyBaseClass>(GetCharacter())->CanSeePlayer())
 	{
@@ -73,7 +73,7 @@ void AEnemy_AI_Controller::IdleState()
 // FOLLOW
 void AEnemy_AI_Controller::ApproachState()
 {
-	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Following player"));
+	//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Following player"));
 
 	// runs to the player
 	MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
@@ -81,7 +81,7 @@ void AEnemy_AI_Controller::ApproachState()
 	if (!Cast<AEnemyBaseClass>(GetCharacter())->CanSeePlayer())
 	{
 		State = StateEnum::RETURN;
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("GONE~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("GONE~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
 	}
 
 }
@@ -89,7 +89,7 @@ void AEnemy_AI_Controller::ApproachState()
 // RETURN
 void AEnemy_AI_Controller::ReturnState()
 {
-	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Going home"));
+	//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Going home"));
 
 	// go home
 	FVector MyHome = Cast<AEnemyBaseClass>(GetCharacter())->GetMyStartLocation();
