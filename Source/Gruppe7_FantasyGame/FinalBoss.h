@@ -39,6 +39,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AEnemyBaseClass> EnemyBlueprint;
 
+	/////////////////////////////////////////
+	// SUMMON LOCATION
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Summon SPAWN")
+		float SpawnX = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Summon SPAWN")
+		float SpawnY = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Summon SPAWN")
+		float SpawnZ = 0;
 
 	/////////////////////////////////////////
 	// LOCATION VARIABLES
@@ -119,4 +127,6 @@ public:
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 	
+	void DeathCheck();
+
 };

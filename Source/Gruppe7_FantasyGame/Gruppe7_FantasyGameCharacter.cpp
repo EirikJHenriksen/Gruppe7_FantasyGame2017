@@ -454,11 +454,8 @@ void AGruppe7_FantasyGameCharacter::MagiAttackStop()
 	SpellIsContinuous = false;
 }
 
-void AGruppe7_FantasyGameCharacter::ManaPotion()
+void AGruppe7_FantasyGameCharacter::ManaPotion(float ManaRestore)
 {	
-	// Mengde mana som regenereres av potion.
-	float ManaRestore{ 0.25f };
-
 	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreMana(ManaRestore);
 
 	//Spiller av VFX.
@@ -468,11 +465,8 @@ void AGruppe7_FantasyGameCharacter::ManaPotion()
 	//UGameplayStatics::PlaySound2D(GetWorld(), ManaPickUpSound, 1.f, 1.f, 0.f);
 }
 
-void AGruppe7_FantasyGameCharacter::HealthPotion()
+void AGruppe7_FantasyGameCharacter::HealthPotion(float HealthRestore)
 {	
-	// Mengde health som regenereres av potion.
-	float HealthRestore{ 0.25f };
-
 	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(HealthRestore);
 
 	//Spiller av VFX.
@@ -641,23 +635,23 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 
 	if (OtherActor->IsA(AWizardCloud::StaticClass()) && Mana < 1.f)
 	{
-		OtherActor->Destroy();
+		OtherActor->SetActorLocation(FVector(0.f, 0.f, -200.f));
 
-		AGruppe7_FantasyGameCharacter::ManaPotion(); // Fiks på mana og health funksjon så det tar i mot en float som definerer restoration amount!
+		AGruppe7_FantasyGameCharacter::ManaPotion(1.f);
 	}
 
 	if (OtherActor->IsA(AManaPotion::StaticClass()) && Mana < 1.f)
 	{
 		OtherActor->Destroy();
 
-		AGruppe7_FantasyGameCharacter::ManaPotion();
+		AGruppe7_FantasyGameCharacter::ManaPotion(0.25f);
 	}
 
 	if (OtherActor->IsA(AHealthPotion::StaticClass()) && Health < 1.f)
 	{
 		OtherActor->Destroy();
 		
-		AGruppe7_FantasyGameCharacter::HealthPotion();
+		AGruppe7_FantasyGameCharacter::HealthPotion(0.25f);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////

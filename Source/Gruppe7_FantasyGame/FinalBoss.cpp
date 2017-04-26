@@ -7,6 +7,7 @@
 #include "CircleOfThorns.h"
 #include "PhysAttackBox.h"
 #include "BossSpellFire.h"
+#include "EnemyBaseClass.h"
 #include "Gruppe7_FantasyGameCharacter.h"
 #include "FantasyGameInstance.h"
 
@@ -28,7 +29,7 @@ void AFinalBoss::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Health = 100.f;
+	Health = 1.f;
 
 	canTeleport = true;
 
@@ -67,7 +68,7 @@ void AFinalBoss::Tick(float DeltaTime)
 		{
 			canTeleport = false;
 
-			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("TIMER - ACTIVE"));
+			//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("TIMER - ACTIVE"));
 
 			RandomTeleportTime = FMath::RandRange(RandomMin, RandomMax);
 
@@ -80,7 +81,7 @@ void AFinalBoss::Tick(float DeltaTime)
 		{
 			isAttacking = true;
 
-			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("ATTACK - ACTIVE"));
+			//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("ATTACK - ACTIVE"));
 
 			RandomAttackTime = FMath::RandRange(AttackRandomMin, AttackRandomMax);
 
@@ -103,7 +104,7 @@ void AFinalBoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void AFinalBoss::Teleport()
 {	
-	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORTER - FUNCTION IN PROGRESS"));
+	//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORTER - FUNCTION IN PROGRESS"));
 
 	// Teleports the boss to one of three random spots.
 	int random = FMath::RandRange(0, 2);
@@ -116,46 +117,73 @@ void AFinalBoss::Teleport()
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("SOMETHING WENT WRONG WITH BOSS TELEPORT! FUNCTION: Teleport()"));
 		break;
 	case 0:
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - FIRE"));
-		Element = 0;
+		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - FIRE"));
 		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), SFX01, GetActorLocation());
 		//VFX.
 		if (Element != 0)
 		{
+			Element = 0;
 			SetActorLocation(FVector(FireX, FireY, FireZ), false);
+		}
+		else if (Element != 1)
+		{
+			Element = 1;
+			SetActorLocation(FVector(WaterX, WaterY, WaterZ), false);
 		}
 		else
 		{
-			SetActorLocation(FVector(WaterX, WaterY, WaterZ), false);
+			Element = 2;
+			SetActorLocation(FVector(NatureX, NatureY, NatureZ), false);
 		}
+
+		SummonEnemy();
+
 		break;
 	case 1:
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - WATER"));
-		Element = 1;
+		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - WATER"));
 		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), SFX02, GetActorLocation());
 		//VFX.
 		if (Element != 1)
 		{
+			Element = 1;
 			SetActorLocation(FVector(WaterX, WaterY, WaterZ), false);
+		}
+		else if (Element != 2)
+		{
+			Element = 2;
+			SetActorLocation(FVector(NatureX, NatureY, NatureZ), false);
 		}
 		else
 		{
-			SetActorLocation(FVector(NatureX, NatureY, NatureZ), false);
+			Element = 0;
+			SetActorLocation(FVector(FireX, FireY, FireZ), false);
 		}
+
+		SummonEnemy();
+
 		break;
 	case 2:
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - NATURE"));
-		Element = 2;
+		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - NATURE"));
 		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), SFX03, GetActorLocation());
 		//VFX.
 		if (Element != 1)
 		{
+			Element = 2;
 			SetActorLocation(FVector(NatureX, NatureY, NatureZ), false);
+		}
+		else if (Element != 0)
+		{
+			Element = 0;
+			SetActorLocation(FVector(FireX, FireY, FireZ), false);
 		}
 		else
 		{
-			SetActorLocation(FVector(FireX, FireY, FireZ), false);
+			Element = 1;
+			SetActorLocation(FVector(WaterX, WaterY, WaterZ), false);
 		}
+
+		SummonEnemy();
+
 		break;
 	}
 
@@ -206,6 +234,7 @@ void AFinalBoss::Attack()
 void AFinalBoss::SummonEnemy()
 {
 	// Summons random enemy.
+	GetWorld()->SpawnActor<AEnemyBaseClass>(EnemyBlueprint, FVector(SpawnX, SpawnY, SpawnZ), GetActorRotation());
 }
 
 void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
@@ -224,20 +253,41 @@ void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Oth
 
 		if (!fightInProgress)
 		{
-			//Spill av partikkeleffekt og lyd. - Onskapsfull latter som viser at angrepet ikke gjør noe.
+			//Spill av partikkeleffekt og lyd. - Onskapsfull latter som viser at angrepet ikke gjør noe. - LAG EGEN FUNKSJON!!!
 		}
 
+		Health -= 0.05f;
 	}
 
 	// Circle of thorns - NATURE
 	if (OtherActor->IsA(ACircleOfThorns::StaticClass()))
 	{
+		if (!fightInProgress)
+		{
+			//Spill av partikkeleffekt og lyd. - Onskapsfull latter som viser at angrepet ikke gjør noe.
+		}
 
+		Health -= 0.05f;
 	}
 
 	// Cone of fire - FIRE
 	if (OtherActor->IsA(AConeOfFire::StaticClass()))
 	{
+		if (!fightInProgress)
+		{
+			//Spill av partikkeleffekt og lyd. - Onskapsfull latter som viser at angrepet ikke gjør noe.
+		}
 
+		Health -= 0.05f;
+	}
+
+	DeathCheck();
+}
+
+void AFinalBoss::DeathCheck()
+{
+	if (Health < 0.f)
+	{
+		Destroy();
 	}
 }

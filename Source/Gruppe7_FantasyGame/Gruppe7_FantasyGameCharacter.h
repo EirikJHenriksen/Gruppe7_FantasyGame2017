@@ -203,9 +203,9 @@ protected:
 
 
 	/** Item functions */
-	void ManaPotion();
+	void ManaPotion(float ManaRestore);
 
-	void HealthPotion();
+	void HealthPotion(float HealthRestore);
 
 	void PowerUp_Speed();
 
