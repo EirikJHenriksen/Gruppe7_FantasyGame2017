@@ -130,6 +130,11 @@ int UFantasyGameInstance::GetCurrentLevel()
 	return CurrentLevel;
 }
 
+bool UFantasyGameInstance::GetBossFightActive()
+{
+	return BossFightActive;
+}
+
 //void UFantasyGameInstance::SetPlayerVelocity(FVector Velocity)
 //{
 //	PlayerVelocity = Velocity;

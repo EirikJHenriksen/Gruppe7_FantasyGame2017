@@ -37,6 +37,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameVariables)
 		bool BossFightActive;
 
+	// Used to stop GameMode from creating a menu on every BeginPlay. It's only supposed to do it as a start menu
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
+		bool IsFirstTimeMenuCalled = true;
 
 	FVector PlayerLocation;
 
@@ -80,9 +83,7 @@ public:
 
 	int GetCurrentLevel();
 
-	// used to stop GameMode from creating a menu on every BeginPlay. It's only supposed to do it as a start menu
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
-	bool IsFirstTimeMenuCalled = true;
+	bool GetBossFightActive();
 
 	//void SetPlayerVelocity(FVector Velocity);
 

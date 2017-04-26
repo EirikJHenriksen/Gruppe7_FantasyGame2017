@@ -386,13 +386,13 @@ void AGruppe7_FantasyGameCharacter::MagiFireCone()
 void AGruppe7_FantasyGameCharacter::MagiThornCircle()
 {
 	//Set the required mana for casting this spell.
-	float ManaRequirement{ 0.2f };
+	float ManaRequirement{ 0.1f };
 
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
 	{	
 		FVector Location = GetActorLocation();
-		FVector Offset = FVector(0.0f, 0.0f, -400.0f);
+		FVector Offset = FVector(50.0f, 0.0f, -400.0f);
 
 		FRotator ProjectileRotation = GetActorRotation();
 
