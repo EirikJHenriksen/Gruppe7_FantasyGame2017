@@ -21,6 +21,12 @@ public:
 	// LOCATION VARIABLES
 	void UpdateTarget();
 
+	UFUNCTION()
+		void OnStop(const FHitResult & HitResult);
+
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit);
+
 	FVector CurrentPlayerLocation;
 
 	FVector TargetVector;
@@ -45,8 +51,4 @@ public:
 	// Projectile movement component.
 	UPROPERTY(VisibleAnywhere, Category = Movement)
 		UProjectileMovementComponent* ProjectileMovementComponent;
-
-	//UFUNCTION()
-	//void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-
 };

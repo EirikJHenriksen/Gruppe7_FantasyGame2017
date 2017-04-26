@@ -2,6 +2,8 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "CircleOfThorns.h"
+#include "BossSpellWater.h"
+
 
 
 // Sets default values
@@ -15,6 +17,8 @@ ACircleOfThorns::ACircleOfThorns()
 	RootComponent = RootSphere;
 	RootSphere->bGenerateOverlapEvents = true;
 	RootSphere->SetWorldScale3D(FVector(0.5f, 0.5f, 0.5f));
+
+	RootSphere->OnComponentHit.AddDynamic(this, &ACircleOfThorns::OnHit);
 }
 
 // Called when the game starts or when spawned
@@ -33,7 +37,7 @@ void ACircleOfThorns::Tick(float DeltaTime)
 	SetActorLocation(NewLocation);
 	if (!Stopped)
 	{
-		CurrentVelocity.Z = 500.0f;
+		CurrentVelocity.Z = 800.0f;
 	}
 	if (NewLocation.Z > 80.0f)
 	{
@@ -46,4 +50,15 @@ void ACircleOfThorns::Tick(float DeltaTime)
 	{
 		this->Destroy();
 	}
+}
+
+void ACircleOfThorns::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+{
+	if (OtherActor->IsA(ABossSpellWater::StaticClass()))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("IMPACT!"));
+		OtherActor->Destroy();
+	}
+
+	Destroy();
 }

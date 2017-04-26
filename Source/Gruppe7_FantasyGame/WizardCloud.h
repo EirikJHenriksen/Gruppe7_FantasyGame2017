@@ -22,6 +22,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// SPAWN LOCATION
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mana Cloud SPAWN")
+		float SpawnX = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mana Cloud SPAWN")
+		float SpawnY = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mana Cloud SPAWN")
+		float SpawnZ = 0;
+
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere;
 	

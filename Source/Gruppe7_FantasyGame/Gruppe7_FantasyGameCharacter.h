@@ -242,7 +242,10 @@ public:
 	/** A decal that projects to the cursor location. */
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
-	private:
-		UPROPERTY(EditAnywhere)
-		float DamageFromEnemy = 0.03f;
+private:
+	UPROPERTY(EditAnywhere)
+		float DamageFromEnemy = 0.05f;
+
+	UPROPERTY(EditAnywhere)
+		float DamageFromBoss = 0.1f;
 };

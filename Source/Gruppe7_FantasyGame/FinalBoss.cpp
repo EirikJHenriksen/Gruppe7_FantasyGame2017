@@ -7,6 +7,8 @@
 #include "CircleOfThorns.h"
 #include "PhysAttackBox.h"
 #include "BossSpellFire.h"
+#include "BossSpellWater.h"
+#include "BossSpellNature.h"
 #include "EnemyBaseClass.h"
 #include "Gruppe7_FantasyGameCharacter.h"
 #include "FantasyGameInstance.h"
@@ -53,7 +55,7 @@ void AFinalBoss::Tick(float DeltaTime)
 	UpdateDirection();
 
 	// Turns boss towards player.
-	SetActorRotation(LookVector.Rotation() + FRotator(0.f, -180.f, 0.f));
+	SetActorRotation(LookVector.Rotation() + FRotator(0.f, 180.f, 0.f));
 	
 	if (fightInProgress)
 	{	
@@ -214,13 +216,11 @@ void AFinalBoss::Attack()
 			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireAttackSound, GetActorLocation());
 			break;
 		case 1:
-			GetWorld()->SpawnActor<ABossSpellFire>(SpellFireBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-			//GetWorld()->SpawnActor<ABossSpellWater>(SpellWaterBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			GetWorld()->SpawnActor<ABossSpellWater>(SpellWaterBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), WaterAttackSound, GetActorLocation());
 			break;
 		case 2:
-			GetWorld()->SpawnActor<ABossSpellFire>(SpellFireBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-			//GetWorld()->SpawnActor<ABossSpellNature>(SpellNatureBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			GetWorld()->SpawnActor<ABossSpellNature>(SpellNatureBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), NatureAttackSound, GetActorLocation());
 			break;
 		}
@@ -248,37 +248,49 @@ void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Oth
 
 	// Magic Projectile - WATER
 	if (OtherActor->IsA(AMagicProjectile::StaticClass()))
-	{
+	{	
 		OtherActor->Destroy();
 
-		if (!fightInProgress)
+		if (fightInProgress && Element == 0)
+		{	
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Tar damage!"));
+			Health -= 0.05f;
+		}
+		else
 		{
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("Tar ikke damage!"));
 			//Spill av partikkeleffekt og lyd. - Onskapsfull latter som viser at angrepet ikke gjør noe. - LAG EGEN FUNKSJON!!!
 		}
-
-		Health -= 0.05f;
 	}
 
 	// Circle of thorns - NATURE
 	if (OtherActor->IsA(ACircleOfThorns::StaticClass()))
 	{
-		if (!fightInProgress)
+		if (fightInProgress && Element == 1)
 		{
-			//Spill av partikkeleffekt og lyd. - Onskapsfull latter som viser at angrepet ikke gjør noe.
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Tar damage!"));
+			Health -= 0.05f;
 		}
-
-		Health -= 0.05f;
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("Tar ikke damage!"));
+			//Spill av partikkeleffekt og lyd. - Onskapsfull latter som viser at angrepet ikke gjør noe. - LAG EGEN FUNKSJON!!!
+		}
 	}
 
 	// Cone of fire - FIRE
 	if (OtherActor->IsA(AConeOfFire::StaticClass()))
 	{
-		if (!fightInProgress)
+		if (fightInProgress && Element == 2)
 		{
-			//Spill av partikkeleffekt og lyd. - Onskapsfull latter som viser at angrepet ikke gjør noe.
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Tar damage!"));
+			Health -= 0.05f;
 		}
-
-		Health -= 0.05f;
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("Tar ikke damage!"));
+			//Spill av partikkeleffekt og lyd. - Onskapsfull latter som viser at angrepet ikke gjør noe. - LAG EGEN FUNKSJON!!!
+		}
 	}
 
 	DeathCheck();
@@ -286,7 +298,7 @@ void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Oth
 
 void AFinalBoss::DeathCheck()
 {
-	if (Health < 0.f)
+	if (Health <= 0.f)
 	{
 		Destroy();
 	}

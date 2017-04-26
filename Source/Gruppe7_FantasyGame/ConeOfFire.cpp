@@ -2,6 +2,7 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "ConeOfFire.h"
+#include "BossSpellNature.h"
 
 
 // Sets default values
@@ -14,9 +15,9 @@ AConeOfFire::AConeOfFire()
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("MProjectile"));
 
-	//CollisionComponent->OnComponentHit.AddDynamic(this, &AMagicProjectile::OnHit);
+	CollisionComponent->OnComponentHit.AddDynamic(this, &AConeOfFire::OnHit);
 
-	//CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OnOverlap);
+	//CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AConeOfFire::OnOverlap);
 
 	// Use this component to drive this projectile's movement.
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
@@ -56,3 +57,13 @@ void AConeOfFire::Tick(float DeltaTime)
 	}
 }
 
+void AConeOfFire::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+{
+	if (OtherActor->IsA(ABossSpellNature::StaticClass()))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("IMPACT!"));
+		OtherActor->Destroy();
+	}
+
+	Destroy();
+}

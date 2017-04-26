@@ -37,6 +37,12 @@ public:
 		TSubclassOf<class ABossSpellFire> SpellFireBlueprint;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class ABossSpellWater> SpellWaterBlueprint;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class ABossSpellNature> SpellNatureBlueprint;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AEnemyBaseClass> EnemyBlueprint;
 
 	/////////////////////////////////////////

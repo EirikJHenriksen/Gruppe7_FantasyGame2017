@@ -2,6 +2,7 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "WizardCloud.h"
+#include "FantasyGameInstance.h"
 
 
 // Sets default values
@@ -27,5 +28,9 @@ void AWizardCloud::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (Cast<UFantasyGameInstance>(GetGameInstance())->GetMana() <= 0.5f)
+	{
+		SetActorLocation(FVector(SpawnX, SpawnY, SpawnZ));
+	}
 }
 

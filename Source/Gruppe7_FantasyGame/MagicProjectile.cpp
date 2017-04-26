@@ -3,6 +3,7 @@
 #include "Gruppe7_FantasyGame.h"
 #include "Gruppe7_FantasyGameCharacter.h"
 #include "MagicProjectile.h"
+#include "BossSpellFire.h"
 
 
 // Sets default values
@@ -52,7 +53,13 @@ void AMagicProjectile::Tick( float DeltaTime )
 }
 
 void AMagicProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
-{
+{	
+	if (OtherActor->IsA(ABossSpellFire::StaticClass()))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("IMPACT!"));
+		OtherActor->Destroy();
+	}
+
 	Destroy();
 }
 

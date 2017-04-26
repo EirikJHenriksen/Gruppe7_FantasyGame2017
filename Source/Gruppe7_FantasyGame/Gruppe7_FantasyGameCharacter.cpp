@@ -11,6 +11,9 @@
 #include "PowerUp_Speed.h"
 #include "WizardCloud.h"
 #include "EnemyAttackBox.h"
+#include "BossSpellFire.h"
+#include "BossSpellWater.h"
+#include "BossSpellNature.h"
 #include "FantasyGameInstance.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
@@ -524,8 +527,8 @@ void AGruppe7_FantasyGameCharacter::Respawner()
 		break;
 	}
 
-	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(100.f);
-	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(100.f);
+	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(1.f);
+	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreMana(1.f);
 }
 
 void AGruppe7_FantasyGameCharacter::PlayerDamageSound()
@@ -623,6 +626,63 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 
 		if (Health <= 0.f)
 		{	
+			// DEBUG - Erstatt med en effekt?
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
+
+			Respawner();
+		}
+	}
+
+	if (OtherActor->IsA(ABossSpellFire::StaticClass()))
+	{
+		OtherActor->Destroy();
+
+		Cast<UFantasyGameInstance>(GetGameInstance())->DrainHealth(DamageFromBoss);
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
+
+		PlayerDamageSound();
+
+		if (Health <= 0.f)
+		{
+			// DEBUG - Erstatt med en effekt?
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
+
+			Respawner();
+		}
+	}
+
+	if (OtherActor->IsA(ABossSpellWater::StaticClass()))
+	{
+		OtherActor->Destroy();
+
+		Cast<UFantasyGameInstance>(GetGameInstance())->DrainHealth(DamageFromBoss);
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
+
+		PlayerDamageSound();
+
+		if (Health <= 0.f)
+		{
+			// DEBUG - Erstatt med en effekt?
+			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
+
+			Respawner();
+		}
+	}
+
+	if (OtherActor->IsA(ABossSpellNature::StaticClass()))
+	{
+		OtherActor->Destroy();
+
+		Cast<UFantasyGameInstance>(GetGameInstance())->DrainHealth(DamageFromBoss);
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
+
+		PlayerDamageSound();
+
+		if (Health <= 0.f)
+		{
 			// DEBUG - Erstatt med en effekt?
 			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
 
