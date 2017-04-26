@@ -244,5 +244,5 @@ public:
 
 	private:
 		UPROPERTY(EditAnywhere)
-		float DamageFromEnemy = 0.03f;
+		float DamageFromEnemy = 0.05f;
 };
