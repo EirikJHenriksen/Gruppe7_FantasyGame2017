@@ -615,7 +615,7 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 	{
 		OtherActor->Destroy();
 
-		Cast<UFantasyGameInstance>(GetGameInstance())->DrainHealth(0.1f);
+		Cast<UFantasyGameInstance>(GetGameInstance())->DrainHealth(DamageFromEnemy);
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
 

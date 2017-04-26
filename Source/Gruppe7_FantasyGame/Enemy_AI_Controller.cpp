@@ -49,79 +49,50 @@ default:
 }
 
 // FUNCTIONS FOR STATES START HERE
-// IDLE
+
+///// IDLE /////
 void AEnemy_AI_Controller::IdleState()
 {
-	//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("I am being idle"));
 
+	///// check for change /////
 	if (Cast<AEnemyBaseClass>(GetCharacter())->CanSeePlayer())
 	{
 		State = StateEnum::FOLLOW;
 	}
-
-	//float Distance = Cast<AEnemyBaseClass>(GetCharacter())->GetDistanceToPlayer();
-	//// if close enough, check if can see
-	//if (Distance < 900.f)
-	//	{
-	//		
-	//		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Player within distance"));
-	//		State = StateEnum::FOLLOW;
-	//		
-	//	}
 }
 
-// FOLLOW
+///// FOLLOW /////
 void AEnemy_AI_Controller::ApproachState()
 {
-	//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Following player"));
 
 	// runs to the player
 	MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
 	
+	///// check for change /////
 	if (!Cast<AEnemyBaseClass>(GetCharacter())->CanSeePlayer())
 	{
 		State = StateEnum::RETURN;
-		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("GONE~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
 	}
-
 }
 
-// RETURN
+///// RETURN /////
 void AEnemy_AI_Controller::ReturnState()
 {
-	//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Going home"));
-
+	
 	// go home
 	FVector MyHome = Cast<AEnemyBaseClass>(GetCharacter())->GetMyStartLocation();
+	FVector CurrentLocation = GetCharacter()->GetActorLocation();
+	FVector DistanceFromHomeVector = CurrentLocation - MyHome;
+	float DistanceFromHome = DistanceFromHomeVector.Size();
 	MoveToLocation(MyHome, 5.f, true, true, true, true, 0, true);
 
-	// when home location is close enough become idle
-	if (true)
+	///// check for change /////
+	if (DistanceFromHomeVector.Size() < 50)
 	{
 		State = StateEnum::IDLE;
 	}
-
+	else if (Cast<AEnemyBaseClass>(GetCharacter())->CanSeePlayer())
+	{
+		State = StateEnum::FOLLOW;
+	}
 }
-
-
-/*
- Get distance
-float Distance = Cast<AEnemyBaseClass>(GetCharacter())->GetDistanceToPlayer();
-
- If distance is less than ~300.f 
-if (Distance < 700.f)
-{
-	 runs to the player
-
-	MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
-
-}
-else
-{
-	 runs to the player
-
-	 go home
-	FVector MyHome = Cast<AEnemyBaseClass>(GetCharacter())->GetMyStartLocation();
-	MoveToLocation(MyHome, 5.f, true, true, true, true, 0, true);
-}
-*/

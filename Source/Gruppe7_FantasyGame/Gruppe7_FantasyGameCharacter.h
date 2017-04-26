@@ -241,5 +241,8 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return TopDownCameraComponent; }
 	/** A decal that projects to the cursor location. */
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
-};
 
+	private:
+		UPROPERTY(EditAnywhere)
+		float DamageFromEnemy = 0.03f;
+};

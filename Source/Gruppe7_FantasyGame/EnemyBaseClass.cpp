@@ -32,6 +32,8 @@ AEnemyBaseClass::AEnemyBaseClass()
 	GetCharacterMovement()->AirControlBoostMultiplier = 0.f;
 	GetCharacterMovement()->AirControlBoostVelocityThreshold = 0.f;
 
+	// set movement speed
+	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +42,7 @@ void AEnemyBaseClass::BeginPlay()
 	Super::BeginPlay();
 	
 	MyStartLocation = GetActorLocation();
-
+	
 }
 
 // Called every frame
@@ -202,14 +204,14 @@ void AEnemyBaseClass::EnemyIsHit(float force, float duration)
 
 	LaunchCharacter((KnockbackVector * force) + FVector(0.f, 0.f, 20.f), false, false);
 
-	GetCharacterMovement()->MaxWalkSpeed = 100.f;
+	GetCharacterMovement()->MaxWalkSpeed = (MovementSpeed / 4);
 
 	GetWorldTimerManager().SetTimer(SlowdownTimerHandle, this, &AEnemyBaseClass::SlowdownOver, duration, false);
 }
 
 void AEnemyBaseClass::SlowdownOver()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 
 	GetWorld()->GetTimerManager().ClearTimer(SlowdownTimerHandle);
 }

@@ -100,6 +100,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		FVector MyStartLocation;
 
+	UPROPERTY(EditAnywhere)
+		float MovementSpeed = 500.f;
+
 	// holds the distance between enemy and player
 	float DistanceToPlayer = 1000.f; // just initializing a arbitrary value
 
@@ -119,6 +122,8 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		USoundBase* EnemyMeleeAttackSound;
+
+
 
 	//typedef void (AEnemyBaseClass::*FunctionPointer)(void);
 	//trying to make a function pointer for states, basically
