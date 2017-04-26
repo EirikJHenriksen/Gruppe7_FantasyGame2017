@@ -27,10 +27,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AEnemyAttackBox> EnemyAttackBlueprint;
 
-
-	// Mana?
+	// Mana
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-		TSubclassOf<class AManaPotion> SpawningMana; // holds the blueprint of the mana potion
+		TSubclassOf<class AManaPotion> ManaBlueprint;
+
+	// Mana
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AHealthPotion> HealthBlueprint;
 
 	/////////////////////////////////////
 	// VFX.
@@ -101,7 +104,7 @@ private:
 		FVector MyStartLocation;
 
 	UPROPERTY(EditAnywhere)
-		float MovementSpeed = 500.f;
+		float MovementSpeed = 600.f;
 
 	// holds the distance between enemy and player
 	float DistanceToPlayer = 1000.f; // just initializing a arbitrary value

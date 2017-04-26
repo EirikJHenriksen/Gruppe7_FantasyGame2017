@@ -10,6 +10,7 @@
 #include "Gruppe7_FantasyGameCharacter.h"
 #include "FantasyGameInstance.h"
 #include "ManaPotion.h"
+#include "HealthPotion.h"
 #include "EnemyAttackBox.h"
 
 // Sets default values
@@ -23,17 +24,17 @@ AEnemyBaseClass::AEnemyBaseClass()
 	GetCapsuleComponent()->bGenerateOverlapEvents = true;
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyBaseClass::OnOverlap);
 
-	// get Mana Potion Blueprint
-	static ConstructorHelpers::FObjectFinder<UClass> SpawningManaFinder(TEXT("Blueprint'/Game/Blueprints/ManaPotion_BP.ManaPotion_BP_C'"));
-	SpawningMana = SpawningManaFinder.Object;
+	////// get Mana Potion Blueprint
+	//static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Blueprints/ManaPotion_BP.ManaPotion_BP_C'"));
+	//if (ItemBlueprint.Object) 
+	//{
+	//	ManaBlueprint = (UClass*)ItemBlueprint.Object->GeneratedClass;
+	//}
 
 	// Sets control parameters
 	GetCharacterMovement()->AirControl = 0.f;
 	GetCharacterMovement()->AirControlBoostMultiplier = 0.f;
 	GetCharacterMovement()->AirControlBoostVelocityThreshold = 0.f;
-
-	// set movement speed
-	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +43,9 @@ void AEnemyBaseClass::BeginPlay()
 	Super::BeginPlay();
 	
 	MyStartLocation = GetActorLocation();
-	
+
+	// set movement speed
+	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 }
 
 // Called every frame
@@ -174,21 +177,38 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("error - EnemyBaseClass - attacked"));
 		}
 	}
+
 	DeathCheck();
 }
 
 // Check if dead
 void AEnemyBaseClass::DeathCheck()
 {
-	if (HealthPoints <= 0.f) // dies
+	// DIE
+	if (HealthPoints <= 0.f)
 	{
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EnemyDeathSound, GetActorLocation());
 
-		// could spawn a potion here
-
 		Destroy();
+
+		// might spawn potion
+		if (FMath::RandRange(0, 1) == 0)
+		{
+			//// randomize which potion is spawned
+			if (FMath::RandRange(0, 2) == 0)
+			{
+				// spawn health potion
+				GetWorld()->SpawnActor<AHealthPotion>(HealthBlueprint, GetActorLocation(), GetActorRotation());
+			}
+			else
+			{
+				// spawn mana potion
+				GetWorld()->SpawnActor<AManaPotion>(ManaBlueprint, GetActorLocation(), GetActorRotation());
+			}
+		}
 	}
-	else // is not dead, just gets hurt
+	// NOT DIE - but gets hurt
+	else 
 	{
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), EnemyHurtSound, GetActorLocation());
 	}
@@ -240,13 +260,10 @@ bool AEnemyBaseClass::CanSeePlayer()
 
 			if (hitResult.bBlockingHit)
 			{
-				//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("view blocked"));
 				return false;
 			}
 			else
 			{
-				//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("sees player"));
-
 				// Enemy physical attack. - should move to controller ///////////
 				if (DistanceToPlayer < 100.f)
 				{
