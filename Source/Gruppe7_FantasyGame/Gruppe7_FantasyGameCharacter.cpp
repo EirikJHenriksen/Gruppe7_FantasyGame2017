@@ -313,12 +313,12 @@ void AGruppe7_FantasyGameCharacter::PhysAttack()
 		{
 			AttackDelay = true;
 
-			FVector Location = GetActorLocation();
-			FVector Offset = FVector(0.0f, 0.0f, 0.0f);
+			//FVector Location = GetActorLocation();
+			//FVector Offset = FVector(0.0f, 0.0f, 0.0f);
 
-			FRotator ProjectileRotation = GetActorRotation();
+			//FRotator ProjectileRotation = GetActorRotation();
 
-			Location += Offset;
+			//Location += Offset;
 
 			GetWorld()->SpawnActor<APhysAttackBox>(PhysAttackBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
@@ -341,12 +341,12 @@ void AGruppe7_FantasyGameCharacter::MagiProjectile()
 		{	
 			MagicDelay = true;
 
-			FVector Location = GetActorLocation();
-			FVector Offset = FVector(50.0f, 0.0f, 0.0f);
+			//FVector Location = GetActorLocation();
+			//FVector Offset = FVector(50.0f, 0.0f, 0.0f);
 
-			FRotator ProjectileRotation = GetActorRotation();
+			//FRotator ProjectileRotation = GetActorRotation();
 
-			Location += Offset;
+			//Location += Offset;
 
 			GetWorld()->SpawnActor<AMagicProjectile>(MagicProjectileBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
@@ -370,12 +370,12 @@ void AGruppe7_FantasyGameCharacter::MagiFireCone()
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
 	{
-		FVector Location = GetActorLocation();
-		FVector Offset = FVector(50.0f, 0.0f, 0.0f);
+		//FVector Location = GetActorLocation();
+		//FVector Offset = FVector(50.0f, 0.0f, 0.0f);
 
-		FRotator ProjectileRotation = GetActorRotation();
+		//FRotator ProjectileRotation = GetActorRotation();
 
-		Location += Offset;
+		//Location += Offset;
 
 		GetWorld()->SpawnActor<AConeOfFire>(MagicFireConeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
@@ -394,14 +394,14 @@ void AGruppe7_FantasyGameCharacter::MagiThornCircle()
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
 	{	
-		FVector Location = GetActorLocation();
-		FVector Offset = FVector(50.0f, 0.0f, -400.0f);
+		//FVector Location = GetActorLocation();
+		//FVector Offset = FVector(200.f, 0.0f, -400.0f);
 
-		FRotator ProjectileRotation = GetActorRotation();
+		//FRotator ProjectileRotation = GetActorRotation();
 
-		Location += Offset;
+		//Location += Offset;
 
-		GetWorld()->SpawnActor<ACircleOfThorns>(MagicThornCircleBlueprint, Location + GetActorForwardVector() * 1.f, GetActorRotation());
+		GetWorld()->SpawnActor<ACircleOfThorns>(MagicThornCircleBlueprint, GetActorLocation() + GetActorForwardVector() * 200.f, GetActorRotation());
 
 		//Spiller skytelyd.
 		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);

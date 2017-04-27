@@ -15,10 +15,11 @@ public:
 	ACircleOfThorns();
 
 	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootSphere;
+		UShapeComponent* RootCollision;
 
 	// TEST.
 	FVector CurrentVelocity;
+
 	bool Stopped = false;
 
 protected:
@@ -33,7 +34,10 @@ public:
 		void OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit);
 
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 4.f;
+		float TimeBeforeRetracting = 4.f;
+
+	UPROPERTY(EditAnywhere)
+		float TimeBeforeDestroy = 6.f;
 
 	float TimeLived{ 0 };
 
