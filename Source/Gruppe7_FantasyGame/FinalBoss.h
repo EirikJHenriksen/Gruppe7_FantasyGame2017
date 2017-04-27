@@ -28,7 +28,7 @@ public:
 	/////////////////////////////////////////
 	// Stats.
 
-	UPROPERTY(EditAnywhere, Category = "Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 		float Health;
 
 	/////////////////////////////////////////
