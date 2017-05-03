@@ -43,7 +43,13 @@ public:
 		TSubclassOf<class ABossSpellNature> SpellNatureBlueprint;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-		TSubclassOf<class AEnemyBaseClass> EnemyBlueprint;
+		TSubclassOf<class AEnemyBaseClass> FireEnemyBlueprint;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AEnemyBaseClass> WaterEnemyBlueprint;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AEnemyBaseClass> NatureEnemyBlueprint;
 
 	/////////////////////////////////////////
 	// SUMMON LOCATION
@@ -74,15 +80,19 @@ public:
 
 	bool firstTeleport;
 
+	bool canBeHurt;
+
 	FTimerHandle TeleportTimerHandle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teleport timers")
-		float RandomMin = 5;
+	FTimerHandle FirstTeleportTimerHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teleport timers")
-		float RandomMax = 10;
+		float RandomMin = 5.f;
 
-	float RandomTeleportTime = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teleport timers")
+		float RandomMax = 10.f;
+
+	float RandomTeleportTime = 0.f;
 
 	// Teleport locations.
 	
@@ -121,12 +131,12 @@ public:
 	FTimerHandle AttackTimerHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack timers")
-		float AttackRandomMin = 2;
+		float AttackRandomMin = 2.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack timers")
-		float AttackRandomMax = 8;
+		float AttackRandomMax = 8.f;
 
-	float RandomAttackTime = 0;
+	float RandomAttackTime = 0.f;
 
 
 	// Overlap function

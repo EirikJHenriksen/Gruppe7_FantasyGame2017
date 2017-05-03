@@ -32,10 +32,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
 		int CurrentLevel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameVariables)
+		bool PlayerIsDead;
+
 	////////////////////////////////////////////////////////////////////
 	// Game variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameVariables)
 		bool BossFightActive;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameVariables)
+		bool GameIsWon;
 
 	// Used to stop GameMode from creating a menu on every BeginPlay. It's only supposed to do it as a start menu
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerVariables)
@@ -84,6 +90,14 @@ public:
 	int GetCurrentLevel();
 
 	bool GetBossFightActive();
+
+	void SetGameIsWon(bool victory);
+
+	bool GetGameIsWon();
+
+	void SetPlayerIsDead(bool dead);
+
+	bool GetPlayerIsDead();
 
 	//void SetPlayerVelocity(FVector Velocity);
 

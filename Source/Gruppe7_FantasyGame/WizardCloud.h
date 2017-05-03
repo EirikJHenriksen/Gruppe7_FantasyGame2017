@@ -22,6 +22,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void Spawn();
+
 	// SPAWN LOCATION
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mana Cloud SPAWN")
 		float SpawnX = 0;
@@ -29,6 +31,17 @@ public:
 		float SpawnY = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mana Cloud SPAWN")
 		float SpawnZ = 0;
+
+	// SPAWN TIMERS
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teleport timers")
+		float RandomMin = 6.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teleport timers")
+		float RandomMax = 12.f;
+
+	FTimerHandle SpawnTimerHandle;
+
+	bool cloudIsActive;
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere;

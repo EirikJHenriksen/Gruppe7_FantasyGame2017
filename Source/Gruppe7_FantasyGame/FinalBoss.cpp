@@ -7,8 +7,6 @@
 #include "CircleOfThorns.h"
 #include "PhysAttackBox.h"
 #include "BossSpellFire.h"
-#include "BossSpellWater.h"
-#include "BossSpellNature.h"
 #include "EnemyBaseClass.h"
 #include "Gruppe7_FantasyGameCharacter.h"
 #include "FantasyGameInstance.h"
@@ -32,6 +30,8 @@ void AFinalBoss::BeginPlay()
 	Super::BeginPlay();
 
 	Health = 1.f;
+
+	canBeHurt = false;
 
 	canTeleport = true;
 
@@ -62,7 +62,7 @@ void AFinalBoss::Tick(float DeltaTime)
 		if (firstTeleport)
 		{	
 			// PUT IN A SHORT DELAY.
-			Teleport();
+			GetWorldTimerManager().SetTimer(FirstTeleportTimerHandle, this, &AFinalBoss::Teleport, 5.f, false);
 			firstTeleport = false;
 		}
 
@@ -79,7 +79,7 @@ void AFinalBoss::Tick(float DeltaTime)
 			//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORTER - FUNCTION OVER"));
 		}
 
-		if (!canTeleport && !isAttacking && !firstTeleport)
+		if (!canTeleport && !isAttacking && !firstTeleport && fightInProgress)
 		{
 			isAttacking = true;
 
@@ -107,6 +107,13 @@ void AFinalBoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 void AFinalBoss::Teleport()
 {	
 	//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORTER - FUNCTION IN PROGRESS"));
+
+	if (!canBeHurt)
+	{
+		canBeHurt = true;
+
+		GetWorld()->GetTimerManager().ClearTimer(FirstTeleportTimerHandle);
+	}
 
 	// Teleports the boss to one of three random spots.
 	int random = FMath::RandRange(0, 2);
@@ -139,7 +146,6 @@ void AFinalBoss::Teleport()
 		}
 
 		SummonEnemy();
-
 		break;
 	case 1:
 		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - WATER"));
@@ -162,7 +168,6 @@ void AFinalBoss::Teleport()
 		}
 
 		SummonEnemy();
-
 		break;
 	case 2:
 		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("TELEPORT - NATURE"));
@@ -185,7 +190,6 @@ void AFinalBoss::Teleport()
 		}
 
 		SummonEnemy();
-
 		break;
 	}
 
@@ -212,7 +216,23 @@ void AFinalBoss::Attack()
 void AFinalBoss::SummonEnemy()
 {
 	// Summons random enemy.
-	GetWorld()->SpawnActor<AEnemyBaseClass>(EnemyBlueprint, FVector(SpawnX, SpawnY, SpawnZ), GetActorRotation());
+	int random = FMath::RandRange(0, 2);
+
+	switch (random)
+	{
+	default:
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("SOMETHING WENT WRONG WITH SUMMONS! FUNCTION: SummonEnemy()"));
+		break;
+	case 0:
+		GetWorld()->SpawnActor<AEnemyBaseClass>(FireEnemyBlueprint, FVector(SpawnX, SpawnY, SpawnZ), GetActorRotation());
+		break;
+	case 1:
+		GetWorld()->SpawnActor<AEnemyBaseClass>(WaterEnemyBlueprint, FVector(SpawnX, SpawnY, SpawnZ), GetActorRotation());
+		break;
+	case 2:
+		GetWorld()->SpawnActor<AEnemyBaseClass>(NatureEnemyBlueprint, FVector(SpawnX, SpawnY, SpawnZ), GetActorRotation());
+		break;
+	}
 }
 
 void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
@@ -229,7 +249,7 @@ void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Oth
 	{	
 		OtherActor->Destroy();
 
-		if (fightInProgress && Element == 0)
+		if (canBeHurt && Element == 0)
 		{	
 			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Tar damage!"));
 			Health -= 0.05f;
@@ -244,7 +264,7 @@ void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Oth
 	// Circle of thorns - NATURE
 	if (OtherActor->IsA(ACircleOfThorns::StaticClass()))
 	{
-		if (fightInProgress && Element == 1)
+		if (canBeHurt && Element == 1)
 		{
 			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Tar damage!"));
 			Health -= 0.05f;
@@ -259,7 +279,7 @@ void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Oth
 	// Cone of fire - FIRE
 	if (OtherActor->IsA(AConeOfFire::StaticClass()))
 	{
-		if (fightInProgress && Element == 2)
+		if (canBeHurt && Element == 2)
 		{
 			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Tar damage!"));
 			Health -= 0.05f;
@@ -277,7 +297,13 @@ void AFinalBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Oth
 void AFinalBoss::DeathCheck()
 {
 	if (Health <= 0.f)
-	{
+	{	
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("Night-Night døde!"));
+
+		// Erstatt med animasjon.
 		Destroy();
+
+		// Lets the game know that the game is won.
+		Cast<UFantasyGameInstance>(GetGameInstance())->SetGameIsWon(true);
 	}
 }

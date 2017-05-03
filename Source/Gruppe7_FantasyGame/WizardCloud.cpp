@@ -21,6 +21,7 @@ void AWizardCloud::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	cloudIsActive = false;
 }
 
 // Called every frame
@@ -28,9 +29,23 @@ void AWizardCloud::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (Cast<UFantasyGameInstance>(GetGameInstance())->GetMana() <= 0.5f)
-	{
-		SetActorLocation(FVector(SpawnX, SpawnY, SpawnZ));
+	if (Cast<UFantasyGameInstance>(GetGameInstance())->GetMana() <= 0.5f && !cloudIsActive)
+	{	
+		cloudIsActive = true;
+
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("Player needs mana!"));
+
+		GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &AWizardCloud::Spawn, FMath::RandRange(RandomMin, RandomMax), false);
 	}
+}
+
+void AWizardCloud::Spawn()
+{	
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("MANA IS SPAWNED!"));
+
+	//Doesn't actually spawn it, just moves it.
+	SetActorLocation(FVector(SpawnX, SpawnY, SpawnZ));
+	GetWorld()->GetTimerManager().ClearTimer(SpawnTimerHandle);
+	cloudIsActive = false;
 }
 

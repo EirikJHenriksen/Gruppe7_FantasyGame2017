@@ -12,6 +12,8 @@ UFantasyGameInstance::UFantasyGameInstance(const FObjectInitializer& ObjectIniti
 
 	CurrentLevel = 1;
 
+	GameIsWon = false;
+
 	BossFightActive = false;
 }
 
@@ -133,6 +135,26 @@ int UFantasyGameInstance::GetCurrentLevel()
 bool UFantasyGameInstance::GetBossFightActive()
 {
 	return BossFightActive;
+}
+
+void UFantasyGameInstance::SetGameIsWon(bool victory)
+{
+	GameIsWon = victory;
+}
+
+bool UFantasyGameInstance::GetGameIsWon()
+{
+	return GameIsWon;
+}
+
+void UFantasyGameInstance::SetPlayerIsDead(bool dead)
+{
+	PlayerIsDead = dead;
+}
+
+bool UFantasyGameInstance::GetPlayerIsDead()
+{
+	return PlayerIsDead;
 }
 
 //void UFantasyGameInstance::SetPlayerVelocity(FVector Velocity)

@@ -67,7 +67,7 @@ void ABossSpellFire::UpdateTarget()
 
 void ABossSpellFire::OnStop(const FHitResult& HitResult)
 {
-	//Destroy();
+	Destroy();
 }
 
 void ABossSpellFire::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
