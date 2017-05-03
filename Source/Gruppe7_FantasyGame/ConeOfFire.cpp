@@ -2,7 +2,7 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "ConeOfFire.h"
-#include "BossSpellNature.h"
+#include "BossSpellFire.h"
 
 
 // Sets default values
@@ -59,11 +59,9 @@ void AConeOfFire::Tick(float DeltaTime)
 
 void AConeOfFire::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
-	if (OtherActor->IsA(ABossSpellNature::StaticClass()))
+	if (OtherActor->IsA(ABossSpellFire::StaticClass()))
 	{
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("IMPACT!"));
 		OtherActor->Destroy();
 	}
-
-	Destroy();
 }

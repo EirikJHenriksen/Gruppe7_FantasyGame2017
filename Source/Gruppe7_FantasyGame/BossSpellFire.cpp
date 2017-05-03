@@ -4,6 +4,8 @@
 #include "BossSpellFire.h"
 #include "FantasyGameInstance.h"
 #include "MagicProjectile.h"
+#include "ConeOfFire.h"
+#include "CircleOfThorns.h"
 
 
 // Sets default values
@@ -70,7 +72,11 @@ void ABossSpellFire::OnStop(const FHitResult& HitResult)
 
 void ABossSpellFire::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
-	//Destroy();
+	if (OtherActor->IsA(ACircleOfThorns::StaticClass()))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("IMPACT!"));
+		Destroy();
+	}
 }
 
 void ABossSpellFire::Destroy()

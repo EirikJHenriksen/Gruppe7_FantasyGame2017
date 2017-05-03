@@ -2,7 +2,7 @@
 
 #include "Gruppe7_FantasyGame.h"
 #include "CircleOfThorns.h"
-#include "BossSpellWater.h"
+#include "BossSpellFire.h"
 
 
 
@@ -13,18 +13,21 @@ ACircleOfThorns::ACircleOfThorns()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Collision object and RootObject
-	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
-	RootComponent = RootSphere;
-	RootSphere->bGenerateOverlapEvents = true;
-	RootSphere->SetWorldScale3D(FVector(0.5f, 0.5f, 0.5f));
+	RootCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBox"));
+	RootComponent = RootCollision;
+	RootCollision->bGenerateOverlapEvents = true;
+	RootCollision->SetRelativeScale3D (FVector(3.f, 3.f, 1.f));
+	//RootCollision->;
 
-	RootSphere->OnComponentHit.AddDynamic(this, &ACircleOfThorns::OnHit);
+	RootCollision->OnComponentHit.AddDynamic(this, &ACircleOfThorns::OnHit);
 }
 
 // Called when the game starts or when spawned
 void ACircleOfThorns::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, -50.f));
 }
 
 // Called every frame
@@ -39,26 +42,29 @@ void ACircleOfThorns::Tick(float DeltaTime)
 	{
 		CurrentVelocity.Z = 800.0f;
 	}
-	if (NewLocation.Z > 80.0f)
+	if (NewLocation.Z > 180.0f)
 	{
 		Stopped = true;
 		CurrentVelocity.Z = 0.0f;
 	}
 
 	TimeLived += DeltaTime;
-	if (TimeLived > TimeBeforeDestroy)
+	if (TimeLived >= TimeBeforeRetracting)
+	{	
+		CurrentVelocity.Z = -400.0f;
+	}
+
+	if (TimeLived >= TimeBeforeDestroy)
 	{
-		this->Destroy();
+		Destroy();
 	}
 }
 
 void ACircleOfThorns::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
-	if (OtherActor->IsA(ABossSpellWater::StaticClass()))
+	if (OtherActor->IsA(ABossSpellFire::StaticClass()))
 	{
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("IMPACT!"));
 		OtherActor->Destroy();
 	}
-
-	Destroy();
 }

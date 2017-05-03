@@ -199,32 +199,10 @@ void AFinalBoss::Attack()
 	UWorld* World = GetWorld();
 	if (World)
 	{
-		FVector Location = GetActorLocation();
-		FVector Offset = FVector(0.0f, 0.0f, 0.0f);
-
-		FRotator ProjectileRotation = GetActorRotation();
-
-		Location += Offset;
-
-		switch (Element)
-		{
-		default:
-			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("ERROR - Function: Attack()"));
-			break;
-		case 0:
-			GetWorld()->SpawnActor<ABossSpellFire>(SpellFireBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireAttackSound, GetActorLocation());
-			break;
-		case 1:
-			GetWorld()->SpawnActor<ABossSpellWater>(SpellWaterBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), WaterAttackSound, GetActorLocation());
-			break;
-		case 2:
-			GetWorld()->SpawnActor<ABossSpellNature>(SpellNatureBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), NatureAttackSound, GetActorLocation());
-			break;
-		}
+		GetWorld()->SpawnActor<ABossSpellFire>(SpellFireBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireAttackSound, GetActorLocation());
 	}
+
 
 	GetWorld()->GetTimerManager().ClearTimer(AttackTimerHandle);
 
