@@ -45,7 +45,6 @@ case StateEnum::RETURN:
 default:
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("Switch not working in AIController"));
 }
-
 }
 
 // FUNCTIONS FOR STATES START HERE

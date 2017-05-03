@@ -17,6 +17,7 @@
 #include "FantasyGameInstance.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
+#include "CollectionPickup.h"
 #include "Gruppe7_FantasyGameCharacter.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -529,6 +530,7 @@ void AGruppe7_FantasyGameCharacter::Respawner()
 
 	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(1.f);
 	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreMana(1.f);
+	CollectionPickup = 0;
 }
 
 void AGruppe7_FantasyGameCharacter::PlayerDamageSound()
@@ -710,8 +712,16 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 	if (OtherActor->IsA(AHealthPotion::StaticClass()) && Health < 1.f)
 	{
 		OtherActor->Destroy();
-		
+
 		AGruppe7_FantasyGameCharacter::HealthPotion(0.25f);
+	}
+
+	// pickup should depend on current level?
+	if (OtherActor->IsA(ACollectionPickup::StaticClass()))
+	{
+		OtherActor->Destroy();
+		UGameplayStatics::PlaySound2D(GetWorld(), CollectionPickupSound, 1.f, 1.f, 0.f);
+		CollectionPickup++;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////

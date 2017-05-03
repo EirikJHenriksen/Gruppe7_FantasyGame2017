@@ -11,6 +11,7 @@
 #include "FantasyGameInstance.h"
 #include "ManaPotion.h"
 #include "HealthPotion.h"
+#include "CollectionPickup.h"
 #include "EnemyAttackBox.h"
 
 // Sets default values
@@ -23,13 +24,6 @@ AEnemyBaseClass::AEnemyBaseClass()
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	GetCapsuleComponent()->bGenerateOverlapEvents = true;
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyBaseClass::OnOverlap);
-
-	////// get Mana Potion Blueprint
-	//static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Blueprints/ManaPotion_BP.ManaPotion_BP_C'"));
-	//if (ItemBlueprint.Object) 
-	//{
-	//	ManaBlueprint = (UClass*)ItemBlueprint.Object->GeneratedClass;
-	//}
 
 	// Sets control parameters
 	GetCharacterMovement()->AirControl = 0.f;
@@ -191,6 +185,12 @@ void AEnemyBaseClass::DeathCheck()
 
 		Destroy();
 
+		if (true) // do this unless it is the boss battle
+		{
+			GetWorld()->SpawnActor<ACollectionPickup>(CollectionPickupBlueprint, GetActorLocation() + FVector(0.f, -30.f, 0.f), GetActorRotation());
+		}
+		
+
 		// might spawn potion
 		if (FMath::RandRange(0, 1) == 0)
 		{
@@ -198,12 +198,12 @@ void AEnemyBaseClass::DeathCheck()
 			if (FMath::RandRange(0, 2) == 0)
 			{
 				// spawn health potion
-				GetWorld()->SpawnActor<AHealthPotion>(HealthBlueprint, GetActorLocation(), GetActorRotation());
+				GetWorld()->SpawnActor<AHealthPotion>(HealthBlueprint, GetActorLocation() + FVector(0.f, 30.f, 0.f), GetActorRotation());
 			}
 			else
 			{
 				// spawn mana potion
-				GetWorld()->SpawnActor<AManaPotion>(ManaBlueprint, GetActorLocation(), GetActorRotation());
+				GetWorld()->SpawnActor<AManaPotion>(ManaBlueprint, GetActorLocation() + FVector(0.f, 30.f, 0.f), GetActorRotation());
 			}
 		}
 	}
@@ -247,9 +247,6 @@ bool AEnemyBaseClass::CanSeePlayer()
 
 		if (DistanceToPlayer < 900.f)
 		{
-
-			//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("Player within distance"));
-		
 			FHitResult hitResult;
 			FVector MyLocation = GetActorLocation();
 			CurrentPlayerLocation = GetWorld()->GetFirstPlayerController()->GetCharacter()->GetActorLocation();

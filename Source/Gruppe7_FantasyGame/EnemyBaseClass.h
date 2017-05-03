@@ -35,6 +35,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AHealthPotion> HealthBlueprint;
 
+	// CollectionPickup
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class ACollectionPickup> CollectionPickupBlueprint;
+
 	/////////////////////////////////////
 	// VFX.
 

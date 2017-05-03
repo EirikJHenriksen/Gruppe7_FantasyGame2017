@@ -121,6 +121,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "SFX")
 		USoundBase* PainSound02;
 
+	UPROPERTY(EditAnywhere, Category = "SFX")
+		USoundBase* CollectionPickupSound;
+
 	// VFX.
 	UPROPERTY(EditAnywhere, Category = "VFX")
 		UParticleSystem* HealthPickUpFX;
@@ -130,6 +133,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "VFX")
 		UParticleSystem* HitFX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+		int CollectionPickup = 0;
 
 
 protected:
