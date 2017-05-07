@@ -84,6 +84,12 @@ public:
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
 	// Handles the player characters death.
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Respawning")
+		bool PlayerIsDead;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Respawning")
+		bool PlayerRespawn;
+
 		void Respawner();
 
 	// Functions that deal with Sound FX
@@ -92,6 +98,8 @@ public:
 		void PlayerDamageSound();
 
 		void PlayerAttackSound();
+
+		void DeathCheck();
 
 	// SFX.
 	UPROPERTY(EditAnywhere, Category = "SFX")

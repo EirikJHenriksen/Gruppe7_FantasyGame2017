@@ -89,6 +89,8 @@ public:
 
 	int GetCurrentLevel();
 
+	void SetBossFightActive(bool status);
+
 	bool GetBossFightActive();
 
 	void SetGameIsWon(bool victory);

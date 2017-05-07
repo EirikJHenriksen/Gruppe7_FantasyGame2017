@@ -5,7 +5,6 @@
 #include "BossSpellFire.h"
 
 
-
 // Sets default values
 ACircleOfThorns::ACircleOfThorns()
 {
@@ -13,10 +12,10 @@ ACircleOfThorns::ACircleOfThorns()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Collision object and RootObject
-	RootCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBox"));
+	RootCollision = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
 	RootComponent = RootCollision;
 	RootCollision->bGenerateOverlapEvents = true;
-	RootCollision->SetRelativeScale3D (FVector(3.f, 3.f, 1.f));
+	RootCollision->SetRelativeScale3D(FVector(2.5f, 2.5f, 2.5f));
 	//RootCollision->;
 
 	RootCollision->OnComponentHit.AddDynamic(this, &ACircleOfThorns::OnHit);
@@ -27,7 +26,7 @@ void ACircleOfThorns::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, -50.f));
+	//SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, -50.f));
 }
 
 // Called every frame

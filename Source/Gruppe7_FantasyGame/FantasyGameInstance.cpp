@@ -132,6 +132,11 @@ int UFantasyGameInstance::GetCurrentLevel()
 	return CurrentLevel;
 }
 
+void UFantasyGameInstance::SetBossFightActive(bool status)
+{
+	BossFightActive = status;
+}
+
 bool UFantasyGameInstance::GetBossFightActive()
 {
 	return BossFightActive;

@@ -148,6 +148,8 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 		default:
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("error - EnemyBaseClass - attacked"));
 		}
+
+		EnemyIsHit(100.f, 3.f);
 	}
 
 	// Cone of fire - FIRE
@@ -273,32 +275,21 @@ bool AEnemyBaseClass::CanSeePlayer()
 				}
 				return true;
 			}
-
-
 		}
 		else
 		{
 			// player not close enough, so no point in running the other tests
 			return false;
 		}
+
 	FHitResult hitResult;
 	FVector MyLocation = GetActorLocation();
 	FCollisionQueryParams collisionParams = FCollisionQueryParams();
 	collisionParams.AddIgnoredActor(this);
-
-
-
 	}
-	else {
+	else
+	{
 		// there is no player available, so more tests could crash the engine
 		return false;
 	}
-
-		
-
-
-
-
-	
-
 }

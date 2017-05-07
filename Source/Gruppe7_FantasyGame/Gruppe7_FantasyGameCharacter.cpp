@@ -144,8 +144,6 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		break;
 	}
 
-
-
 	// TIMERS.
 	if (SpellIsContinuous)
 	{	
@@ -200,6 +198,13 @@ void AGruppe7_FantasyGameCharacter::Tick(float DeltaSeconds)
 		NewDirection.Z = 0.f;
 		NewDirection.Normalize();
 		SetActorRotation(NewDirection.Rotation());
+	}
+
+	if (PlayerRespawn)
+	{	
+		PlayerRespawn = false;
+		//PlayerIsDead = false;
+		Respawner();
 	}
 }
 
@@ -314,13 +319,6 @@ void AGruppe7_FantasyGameCharacter::PhysAttack()
 		{
 			AttackDelay = true;
 
-			//FVector Location = GetActorLocation();
-			//FVector Offset = FVector(0.0f, 0.0f, 0.0f);
-
-			//FRotator ProjectileRotation = GetActorRotation();
-
-			//Location += Offset;
-
 			GetWorld()->SpawnActor<APhysAttackBox>(PhysAttackBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
 			GetWorld()->SpawnActor<AKnockbackSphere>(KnockbackBlueprint, GetActorLocation(), GetActorRotation());
@@ -342,20 +340,12 @@ void AGruppe7_FantasyGameCharacter::MagiProjectile()
 		{	
 			MagicDelay = true;
 
-			//FVector Location = GetActorLocation();
-			//FVector Offset = FVector(50.0f, 0.0f, 0.0f);
-
-			//FRotator ProjectileRotation = GetActorRotation();
-
-			//Location += Offset;
-
 			GetWorld()->SpawnActor<AMagicProjectile>(MagicProjectileBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
 			//Spiller skytelyd.
 			//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
 
 			Cast<UFantasyGameInstance>(GetGameInstance())->DrainMana(ManaRequirement);
-			//Mana -= ManaRequirement;
 		}
 	}
 }
@@ -371,13 +361,6 @@ void AGruppe7_FantasyGameCharacter::MagiFireCone()
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
 	{
-		//FVector Location = GetActorLocation();
-		//FVector Offset = FVector(50.0f, 0.0f, 0.0f);
-
-		//FRotator ProjectileRotation = GetActorRotation();
-
-		//Location += Offset;
-
 		GetWorld()->SpawnActor<AConeOfFire>(MagicFireConeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
 		//Spiller skytelyd.
@@ -395,14 +378,7 @@ void AGruppe7_FantasyGameCharacter::MagiThornCircle()
 	UWorld* World = GetWorld();
 	if (World && (Mana >= ManaRequirement))
 	{	
-		//FVector Location = GetActorLocation();
-		//FVector Offset = FVector(200.f, 0.0f, -400.0f);
-
-		//FRotator ProjectileRotation = GetActorRotation();
-
-		//Location += Offset;
-
-		GetWorld()->SpawnActor<ACircleOfThorns>(MagicThornCircleBlueprint, GetActorLocation() + GetActorForwardVector() * 200.f, GetActorRotation());
+		GetWorld()->SpawnActor<ACircleOfThorns>(MagicThornCircleBlueprint, GetActorLocation() + GetActorForwardVector() * 1.f, GetActorRotation());
 
 		//Spiller skytelyd.
 		//UGameplayStatics::PlaySound2D(GetWorld(), CastSound, 1.f, 1.f, 0.f);
@@ -512,6 +488,11 @@ void AGruppe7_FantasyGameCharacter::PowerUp_SpeedOver()
 
 void AGruppe7_FantasyGameCharacter::Respawner()
 {	
+	if (Cast<UFantasyGameInstance>(GetGameInstance())->GetGameIsWon())
+	{
+		GetWorld()->ServerTravel(FString("/Game/Maps/Level01_TheForest"));
+	}
+
 	switch (CurrentLevel)
 	{
 	default:
@@ -529,7 +510,12 @@ void AGruppe7_FantasyGameCharacter::Respawner()
 	}
 
 	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreHealth(1.f);
+	Health = 1.f;
 	Cast<UFantasyGameInstance>(GetGameInstance())->RestoreMana(1.f);
+	Mana = 1.f;
+	Cast<UFantasyGameInstance>(GetGameInstance())->SetBossFightActive(false);
+
+	PlayerIsDead = false;
 	CollectionPickup = 0;
 }
 
@@ -611,6 +597,17 @@ void AGruppe7_FantasyGameCharacter::PlayerAttackSound()
 	}
 }
 
+void AGruppe7_FantasyGameCharacter::DeathCheck()
+{
+	if (Health <= 0.f)
+	{	
+		PlayerIsDead = true;
+
+		// DEBUG - Erstatt med en effekt?
+		//GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
+	}
+}
+
 void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {	
 	////////////////////////////////////////////////////////////////////////////////
@@ -625,14 +622,6 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
 
 		PlayerDamageSound();
-
-		if (Health <= 0.f)
-		{	
-			// DEBUG - Erstatt med en effekt?
-			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
-
-			Respawner();
-		}
 	}
 
 	if (OtherActor->IsA(ABossSpellFire::StaticClass()))
@@ -644,14 +633,6 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
 
 		PlayerDamageSound();
-
-		if (Health <= 0.f)
-		{
-			// DEBUG - Erstatt med en effekt?
-			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
-
-			Respawner();
-		}
 	}
 
 	if (OtherActor->IsA(ABossSpellWater::StaticClass()))
@@ -663,14 +644,6 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
 
 		PlayerDamageSound();
-
-		if (Health <= 0.f)
-		{
-			// DEBUG - Erstatt med en effekt?
-			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
-
-			Respawner();
-		}
 	}
 
 	if (OtherActor->IsA(ABossSpellNature::StaticClass()))
@@ -682,14 +655,6 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetTransform(), true);
 
 		PlayerDamageSound();
-
-		if (Health <= 0.f)
-		{
-			// DEBUG - Erstatt med en effekt?
-			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Purple, TEXT("YOU DIED! LOL n00b!"));
-
-			Respawner();
-		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -741,4 +706,6 @@ void AGruppe7_FantasyGameCharacter::OnOverlap(UPrimitiveComponent* OverlappedCom
 			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Blue, TEXT("A Power-up is already active!"));
 		}
 	}
+
+	DeathCheck();
 }

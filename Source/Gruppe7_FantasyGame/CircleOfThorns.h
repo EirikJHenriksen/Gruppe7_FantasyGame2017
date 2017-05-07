@@ -40,5 +40,4 @@ public:
 		float TimeBeforeDestroy = 6.f;
 
 	float TimeLived{ 0 };
-
 };
