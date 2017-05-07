@@ -26,7 +26,16 @@ public:
 		UShapeComponent* RootSphere;
 
 
-	// Makes the potion spin.
+	// Makes the potion spin. And float.
 	int Rotator = 1;
+	float TimeCounter = 0.f;
+
+	float DistanceToPlayer();
+
+	void FloatUpDown();
+
+private:
+
+	float HomeZ;
 	
 };
