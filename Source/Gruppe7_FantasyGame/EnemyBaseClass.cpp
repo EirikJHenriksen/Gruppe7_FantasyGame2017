@@ -49,11 +49,27 @@ void AEnemyBaseClass::Tick(float DeltaTime)
 
 	// Keeps track of the players location. IMPORTANT THAT IT STAYS IN TICK FUNCTION.
 	CurrentPlayerLocation = Cast<UFantasyGameInstance>(GetGameInstance())->GetPlayerLocation();
+
+	if (RememberPain != 0)
+	{
+		PainForgetter();
+	}
 }
 
 // getters
 float AEnemyBaseClass::GetDistanceToPlayer() { return DistanceToPlayer; }
 FVector AEnemyBaseClass::GetMyStartLocation() { return MyStartLocation; }
+
+bool AEnemyBaseClass::GetInPain() 
+{ 
+	if (RememberPain != 0)
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
+}
 
 // the enemies melee attack
 void AEnemyBaseClass::MeleeAttack()
@@ -174,6 +190,8 @@ void AEnemyBaseClass::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 		}
 	}
 
+	// every time enemy is hurt it will follow player for 150 frames, no matter what
+	RememberPain = 150.f;
 	DeathCheck();
 }
 
@@ -291,5 +309,14 @@ bool AEnemyBaseClass::CanSeePlayer()
 	{
 		// there is no player available, so more tests could crash the engine
 		return false;
+	}
+}
+
+void AEnemyBaseClass::PainForgetter()
+{
+	RememberPain -= 1.f;
+	if (RememberPain < 0.1f)
+	{
+		RememberPain = 0;
 	}
 }

@@ -56,6 +56,8 @@ public:
 
 	FVector GetMyStartLocation();
 
+	bool GetInPain();
+
 	// sets DistanceToPlayer
 	void UpdateDistance();
 
@@ -86,6 +88,8 @@ public:
 		ElementsEnum Element;
 
 	bool CanSeePlayer();
+
+	void PainForgetter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -130,7 +134,8 @@ private:
 	UPROPERTY(EditAnywhere)
 		USoundBase* EnemyMeleeAttackSound;
 
-
+	//lets try to make enemies follow you if they are hurt
+	float RememberPain = 0;
 
 	//typedef void (AEnemyBaseClass::*FunctionPointer)(void);
 	//trying to make a function pointer for states, basically

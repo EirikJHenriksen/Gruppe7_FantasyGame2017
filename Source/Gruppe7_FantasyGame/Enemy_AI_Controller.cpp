@@ -58,12 +58,15 @@ void AEnemy_AI_Controller::IdleState()
 	{
 		State = StateEnum::FOLLOW;
 	}
+	if (Cast<AEnemyBaseClass>(GetCharacter())->GetInPain())
+	{
+		State = StateEnum::FOLLOW;
+	}
 }
 
 ///// FOLLOW /////
 void AEnemy_AI_Controller::ApproachState()
 {
-
 	// runs to the player
 	MoveToActor(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), 5.f, true, true, true, 0, true);
 	
@@ -72,12 +75,15 @@ void AEnemy_AI_Controller::ApproachState()
 	{
 		State = StateEnum::RETURN;
 	}
+	if (Cast<AEnemyBaseClass>(GetCharacter())->GetInPain())
+	{
+		State = StateEnum::FOLLOW;
+	}
 }
 
 ///// RETURN /////
 void AEnemy_AI_Controller::ReturnState()
 {
-	
 	// go home
 	FVector MyHome = Cast<AEnemyBaseClass>(GetCharacter())->GetMyStartLocation();
 	FVector CurrentLocation = GetCharacter()->GetActorLocation();
@@ -91,6 +97,10 @@ void AEnemy_AI_Controller::ReturnState()
 		State = StateEnum::IDLE;
 	}
 	else if (Cast<AEnemyBaseClass>(GetCharacter())->CanSeePlayer())
+	{
+		State = StateEnum::FOLLOW;
+	}
+	if (Cast<AEnemyBaseClass>(GetCharacter())->GetInPain())
 	{
 		State = StateEnum::FOLLOW;
 	}
