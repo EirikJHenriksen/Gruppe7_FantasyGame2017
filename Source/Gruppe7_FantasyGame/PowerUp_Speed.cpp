@@ -28,9 +28,11 @@ void APowerUp_Speed::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
+	++Rotator;
+	SetActorRotation(FRotator(0.f, (1.f * Rotator), 0.f));
 
-void APowerUp_Speed::PlayerPickUp()
-{
-
+	if (Rotator >= 360)
+	{
+		Rotator = 0;
+	}
 }

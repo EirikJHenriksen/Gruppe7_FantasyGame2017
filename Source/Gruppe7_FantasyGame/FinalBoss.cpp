@@ -55,7 +55,10 @@ void AFinalBoss::Tick(float DeltaTime)
 	UpdateDirection();
 
 	// Turns boss towards player.
-	SetActorRotation(LookVector.Rotation() + FRotator(0.f, 180.f, 0.f));
+	if (!IsDying || !IsDead)
+	{
+		SetActorRotation(LookVector.Rotation() + FRotator(0.f, 180.f, 0.f));
+	}
 	
 	if (fightInProgress)
 	{	
@@ -301,9 +304,9 @@ void AFinalBoss::DeathCheck()
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("Night-Night døde!"));
 
 		// Erstatt med animasjon.
-		Destroy();
+		IsDead = true;
 
-		// Lets the game know that the game is won.
+		// Lets the game know that the game is won. 
 		Cast<UFantasyGameInstance>(GetGameInstance())->SetGameIsWon(true);
 	}
 }

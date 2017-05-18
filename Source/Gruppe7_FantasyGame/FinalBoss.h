@@ -71,15 +71,24 @@ public:
 	int Element = 0;
 
 	/////////////////////////////////////////
+	// Animation hooks
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boss Fight")
+		bool IsDying;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boss Fight")
+		bool IsDead;
+
+	/////////////////////////////////////////
 	// TELEPORTATION VARIABLES.
 	void Teleport();
 
-	bool fightInProgress;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boss Fight")
+		bool fightInProgress;
+	
 	bool canTeleport;
-
+	
 	bool firstTeleport;
-
+	
 	bool canBeHurt;
 
 	FTimerHandle TeleportTimerHandle;
