@@ -205,7 +205,7 @@ void AEnemyBaseClass::DeathCheck()
 
 		Destroy();
 
-		if (true) // do this unless it is the boss battle
+		if (	Cast<UFantasyGameInstance>(GetGameInstance())->GetCurrentLevel() != 3	) // do this unless it is the boss battle
 		{
 			GetWorld()->SpawnActor<ACollectionPickup>(CollectionPickupBlueprint, GetActorLocation() + FVector(0.f, -30.f, 0.f), GetActorRotation());
 		}
