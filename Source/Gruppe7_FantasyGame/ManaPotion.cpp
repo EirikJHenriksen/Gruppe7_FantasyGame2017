@@ -13,9 +13,6 @@ AManaPotion::AManaPotion()
 	//Collision object and RootObject
 	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
 	RootComponent = RootSphere;
-	//RootSphere->bGenerateOverlapEvents = true;
-	//RootSphere->OnComponentBeginOverlap.AddDynamic(this, &AManaPotion::OnOverlap);
-
 }
 
 // Called when the game starts or when spawned
@@ -38,8 +35,3 @@ void AManaPotion::Tick( float DeltaTime )
 		Rotator = 0;
 	}
 }
-
-//void AManaPotion::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-//{
-//  // Empty.
-//}

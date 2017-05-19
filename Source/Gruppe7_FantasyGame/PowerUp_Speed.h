@@ -22,9 +22,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void PlayerPickUp();
-
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere;
-	
+
+	// Makes the powerup spin.
+	int Rotator = 1;
 };

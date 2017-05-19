@@ -26,7 +26,7 @@ void ACircleOfThorns::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, -50.f));
+	SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, -50.f));
 }
 
 // Called every frame
